@@ -1,1 +1,4 @@
 /SeedSchool/Seed/migrations
+/venv
+/.idea
+/SeedSchool/SeedSchool/__pycache__
