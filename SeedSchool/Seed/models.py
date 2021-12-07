@@ -23,9 +23,8 @@ class MyModelBase(models.Model):
     name = models.CharField(max_length=255,default='')
     email = models.CharField(max_length=30,blank=False,unique=True)
     sex = models.IntegerField(choices=Sex,default=0)
-    avatar = models.ImageField(upload_to='Seed/%Y/%m', default='')
+    avatar = models.ImageField(upload_to='Seed/%Y/%m', default='',blank=True,null=True)
     age = models.IntegerField(default=0,blank=False)
-    Class = models.CharField(max_length=30,blank=False,unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
@@ -37,16 +36,26 @@ class MyModelBase(models.Model):
 
 class Teacher(MyModelBase):
     user = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)
-    schedule = models.OneToOneField('Schedule',on_delete=models.CASCADE,default='')
+    Class = models.OneToOneField('Class',on_delete=models.CASCADE,default='')
+
+
+class Class(models.Model):
+    name = models.CharField(max_length=255,unique=True,default='')
+    schedule = models.OneToOneField('Schedule', on_delete=models.CASCADE,blank=True,null=True)
+
+
+    def __str__(self):
+        return self.name
 
 class Student(MyModelBase):
     user = models.OneToOneField('User', on_delete=models.CASCADE, default='', primary_key=True)
-    nameparent = models.CharField(max_length=30,default='')
-    phoneparent = models.CharField(max_length=30,default='')
-    address = models.CharField(max_length=30,default='')
-    idteacher = models.ForeignKey(Teacher,on_delete=models.CASCADE)
-    idshedule = models.ForeignKey('Schedule',on_delete=models.CASCADE)
+    #nameparent = models.CharField(max_length=30,default='')
+    #phoneparent = models.CharField(max_length=30,default='')
+    #address = models.CharField(max_length=30,default='')
+    #idteacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='')
+    schedule = models.ForeignKey('Schedule',on_delete=models.CASCADE,default='')
     activities = models.ManyToManyField('GeneralActivities',blank=True,related_name='activities')
+    Class = models.ForeignKey(Class,on_delete=models.CASCADE,default='')
 
 class Schedule(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -80,7 +89,7 @@ class ScheduleDaily(models.Model):
     time_start = models.IntegerField(choices=Time,default='0')
     time_finish = models.IntegerField(choices=Time, default='0')
     task = models.CharField(max_length=255,blank=False)
-    schedule= models.ForeignKey(Schedule, on_delete=models.CASCADE)
+    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
 
 
 

@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from rest_framework.decorators import action
-from .models import User,Teacher
+from .models import User,Teacher,Student,Schedule,ScheduleDaily
 from rest_framework import viewsets
 from rest_framework.views import APIView
-from .serializers import UserSerializer
+from .serializers import UserSerializer,StudentSerializer,ScheduleDailySerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import generics,status
@@ -59,6 +59,26 @@ class LogoutView(APIView):
             'message': 'success'
         }
         return response
+
+class StudentView(viewsets.ModelViewSet):
+    queryset = Student.objects.filter(active=True)
+    serializer_class = StudentSerializer
+
+
+class StudentScheduleView(APIView):
+    def get(self,request,pk,format=None):
+        data= Student.objects.filter(pk=pk).values('schedule')
+        schedule = data[0]['schedule']
+        schedulelist = ScheduleDaily.objects.filter(schedule=schedule)
+        mydata = ScheduleDailySerializer(schedulelist,many=True)
+        return Response(data=mydata.data,status=status.HTTP_200_OK)
+
+
+
+
+
+
+
 
 
 

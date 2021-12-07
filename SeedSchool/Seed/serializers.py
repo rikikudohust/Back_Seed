@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User,Student,ScheduleDaily
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -15,4 +15,14 @@ class UserSerializer(serializers.ModelSerializer):
                 instance.set_password(password)
             instance.save()
             return instance
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        exclude = ['created_at','updated_at','active',]
+
+class ScheduleDailySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScheduleDaily
+        fields = '__all__'
 
