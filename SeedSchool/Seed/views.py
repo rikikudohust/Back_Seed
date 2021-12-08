@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import action
-from .models import User,Teacher,Student,Schedule,ScheduleDaily
+from .models import User,Teacher,Student,Schedule,ScheduleDaily,Class
+
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from .serializers import UserSerializer,StudentSerializer,ScheduleDailySerializer
@@ -74,6 +75,21 @@ class StudentScheduleView(APIView):
         return Response(data=mydata.data,status=status.HTTP_200_OK)
 
 
+class StudentScheduleDetailView(APIView):
+    def get_object(self,pk,id,format=None):
+        data = Student.objects.filter(pk=pk).values('schedule')
+        schedule = data[0]['schedule']
+        scheduleDetail = ScheduleDaily.objects.filter(schedule=schedule,name=id)
+        return scheduleDetail
+
+    def get(self,request,pk,id,format=None):
+        scheduleDetails = self.get_object(pk,id)
+        serializer = ScheduleDailySerializer(scheduleDetails,many=True)
+        return Response(data=serializer.data,status=status.HTTP_200_OK)
+
+class StudentTeacherDetailView(APIView):
+    def get_object(self,pk,format=None):
+        data = Student.objects.filter(pk=pk).values('')
 
 
 

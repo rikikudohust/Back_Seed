@@ -52,7 +52,7 @@ class Student(MyModelBase):
     #nameparent = models.CharField(max_length=30,default='')
     #phoneparent = models.CharField(max_length=30,default='')
     #address = models.CharField(max_length=30,default='')
-    #idteacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='')
+    idteacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='')
     schedule = models.ForeignKey('Schedule',on_delete=models.CASCADE,default='')
     activities = models.ManyToManyField('GeneralActivities',blank=True,related_name='activities')
     Class = models.ForeignKey(Class,on_delete=models.CASCADE,default='')
