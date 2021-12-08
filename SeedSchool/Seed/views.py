@@ -1,9 +1,11 @@
+from django.db.models import query
 from django.shortcuts import render
-from rest_framework.decorators import action
-from .models import User,Teacher,Student,Schedule,ScheduleDaily
-from rest_framework import viewsets
+from django.utils.translation import activate
+from rest_framework.decorators import action, schema
+from .models import User,Teacher,Student,Schedule,ScheduleDaily, Class
+from rest_framework import serializers, viewsets
 from rest_framework.views import APIView
-from .serializers import UserSerializer,StudentSerializer,ScheduleDailySerializer
+from .serializers import TeacherSerializer, UserSerializer,StudentSerializer,ScheduleDailySerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import generics,status
@@ -72,6 +74,41 @@ class StudentScheduleView(APIView):
         schedulelist = ScheduleDaily.objects.filter(schedule=schedule)
         mydata = ScheduleDailySerializer(schedulelist,many=True)
         return Response(data=mydata.data,status=status.HTTP_200_OK)
+
+class TeacherView(viewsets.ModelViewSet):
+    queryset = Teacher.objects.filter(active=True)
+    serializer_class = TeacherSerializer
+
+class TeacherScheduleView(APIView):
+    def get(self, request, pk, format=None):
+        data  = Teacher.objects.filter(pk=pk).values('Class')
+        classID = data[0]['Class']
+        scheduleQuerySet = Class.objects.filter(pk=classID).values('schedule')
+        scheduleId = scheduleQuerySet[0]['schedule']
+        schedulelist = ScheduleDaily.objects.filter(schedule=scheduleId)
+        print(schedulelist)
+        mydata = ScheduleDailySerializer(schedulelist,many=True)
+        return Response(data=mydata.data, status=status.HTTP_200_OK)
+    
+
+class TeacherSchdeduleDetailView(APIView):
+    def get_object(self, pk, id):
+        teacher  = Teacher.objects.filter(pk=pk).values('Class')
+        classID = teacher[0]['Class']
+        scheduleQuerySet = Class.objects.filter(pk=classID).values('schedule')
+        scheduleId = scheduleQuerySet[0]['schedule']
+        scheduleDetail = ScheduleDaily.objects.filter(schedule=scheduleId,name=id)
+        return scheduleDetail
+
+    def get(self, request, pk, id, format=None):
+        scheduleDetails = self.get_object(pk, id)
+        serializer_schedule = ScheduleDailySerializer(scheduleDetails, many=True)
+        print(serializer_schedule.data)
+        return Response(status=status.HTTP_200_OK)
+
+
+        
+
 
 
 

@@ -49,10 +49,10 @@ class Class(models.Model):
 
 class Student(MyModelBase):
     user = models.OneToOneField('User', on_delete=models.CASCADE, default='', primary_key=True)
-    #nameparent = models.CharField(max_length=30,default='')
-    #phoneparent = models.CharField(max_length=30,default='')
-    #address = models.CharField(max_length=30,default='')
-    #idteacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='')
+    nameparent = models.CharField(max_length=30,default='')
+    phoneparent = models.CharField(max_length=30,default='')
+    address = models.CharField(max_length=30,default='')
+    idteacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='')
     schedule = models.ForeignKey('Schedule',on_delete=models.CASCADE,default='')
     activities = models.ManyToManyField('GeneralActivities',blank=True,related_name='activities')
     Class = models.ForeignKey(Class,on_delete=models.CASCADE,default='')
@@ -89,7 +89,7 @@ class ScheduleDaily(models.Model):
     time_start = models.IntegerField(choices=Time,default='0')
     time_finish = models.IntegerField(choices=Time, default='0')
     task = models.CharField(max_length=255,blank=False)
-    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
+    schedule = models.ForeignKey(Schedule,related_name='Schedule',on_delete=models.CASCADE)
 
 
 
