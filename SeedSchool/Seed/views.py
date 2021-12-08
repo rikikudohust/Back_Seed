@@ -4,7 +4,7 @@ from .models import User,Teacher,Student,Schedule,ScheduleDaily,Class
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
-from .serializers import UserSerializer,StudentSerializer,ScheduleDailySerializer,TeacherSerializer
+from .serializers import UserSerializer,StudentSerializer,ScheduleDailySerializer,TeacherSerializer,ClassSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import generics,status
@@ -61,6 +61,10 @@ class LogoutView(APIView):
         }
         return response
 
+class ClassView(viewsets.ModelViewSet):
+    queryset = Class.objects.all()
+    serializer_class = ClassSerializer
+
 class StudentView(viewsets.ModelViewSet):
     queryset = Student.objects.filter(active=True)
     serializer_class = StudentSerializer
@@ -104,6 +108,8 @@ class StudentTeacherDetailView(APIView):
         mydata = TeacherSerializer(teacherdetail)
         print(mydata)
         return Response(data=mydata.data,status=status.HTTP_200_OK)
+
+
 
 
 

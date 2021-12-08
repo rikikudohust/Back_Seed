@@ -1,10 +1,11 @@
 from django.urls import path,include
-from .views import LoginView,LogoutView,UserView,StudentView,StudentScheduleView,StudentScheduleDetailView,StudentTeacherDetailView,TeacherView
+from .views import LoginView,LogoutView,UserView,StudentView,StudentScheduleView,StudentScheduleDetailView,StudentTeacherDetailView,TeacherView,ClassView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register('students',StudentView)
 router.register('teachers',TeacherView)
+router.register('classes',ClassView)
 urlpatterns = [
 
     #path('register/', RegisterView.as_view()),
