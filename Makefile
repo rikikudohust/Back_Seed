@@ -1,5 +1,5 @@
 migrations: SeedSchool/manage.py
-	python3 SeedSchool/manage.py makemigrations
+	python3 SeedSchool/manage.py makemigrations Seed
 
 migrate: SeedSchool/manage.py
 	python3 SeedSchool/manage.py migrate
@@ -9,3 +9,5 @@ run:
 
 install:
 	pip install -r requirements.txt
+
+

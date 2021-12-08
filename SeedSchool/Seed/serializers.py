@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User,Student,ScheduleDaily
+from .models import User,Student,ScheduleDaily,Teacher
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -25,4 +25,9 @@ class ScheduleDailySerializer(serializers.ModelSerializer):
     class Meta:
         model = ScheduleDaily
         fields = '__all__'
+
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
+        exclude = ['created_at', 'updated_at', 'active']
 

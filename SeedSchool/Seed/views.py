@@ -4,7 +4,7 @@ from .models import User,Teacher,Student,Schedule,ScheduleDaily,Class
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
-from .serializers import UserSerializer,StudentSerializer,ScheduleDailySerializer
+from .serializers import UserSerializer,StudentSerializer,ScheduleDailySerializer,TeacherSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import generics,status
@@ -65,6 +65,10 @@ class StudentView(viewsets.ModelViewSet):
     queryset = Student.objects.filter(active=True)
     serializer_class = StudentSerializer
 
+class TeacherView(viewsets.ModelViewSet):
+    queryset = Teacher.objects.filter(active=True)
+    serializer_class = TeacherSerializer
+
 
 class StudentScheduleView(APIView):
     def get(self,request,pk,format=None):
@@ -89,7 +93,21 @@ class StudentScheduleDetailView(APIView):
 
 class StudentTeacherDetailView(APIView):
     def get_object(self,pk,format=None):
-        data = Student.objects.filter(pk=pk).values('')
+        data = Student.objects.filter(pk=pk).values('idteacher')
+        print(data)
+        teacher = data[0]['idteacher']
+        print(teacher)
+        teacherdetail = Teacher.objects.filter(user=teacher).first()
+        return teacherdetail
+    def get(self,request,pk,format=None):
+        teacherdetail = self.get_object(pk)
+        mydata = TeacherSerializer(teacherdetail)
+        print(mydata)
+        return Response(data=mydata.data,status=status.HTTP_200_OK)
+
+
+
+
 
 
 
