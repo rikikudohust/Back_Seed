@@ -15,7 +15,6 @@ urlpatterns = [
     path('students/<int:pk>/schedules',StudentScheduleView.as_view()),
     path('teachers/<int:pk>/class', TeacherClassView.as_view()),
     path('teachers/<int:pk>/students', TeacherStudentView.as_view()),
-    # path('teachers/<int:pk>/schedules', TeacherScheduleView.as_view()),
-    # path('teachers/<int:pk>/scheduleDaily/<int:id>', TeacherSchdeduleDailyView.as_view()),
-    # path('teachers/<int:pk>/classes', TeacherClassView.as_view()),
+    path('teachers/<int:pk>/schedules', TeacherScheduleView.as_view()),
+    path('teachers/<int:pk>/scheduleDaily/<int:id>', TeacherSchdeduleDailyView.as_view()),
 ]
