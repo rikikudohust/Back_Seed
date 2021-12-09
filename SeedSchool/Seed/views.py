@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from rest_framework.decorators import action
-from .models import User,Teacher,Student,Schedule,ScheduleDaily,Class
+from .models import User,Teacher,Student,Schedule,ScheduleDaily,Class,GeneralActivities
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
-from .serializers import UserSerializer,StudentSerializer,ScheduleDailySerializer,TeacherSerializer,ClassSerializer
+from .serializers import UserSerializer,StudentSerializer,ScheduleDailySerializer,TeacherSerializer,ClassSerializer,GeneralActivitiesSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import generics,status
@@ -61,13 +61,11 @@ class LogoutView(APIView):
         }
         return response
 
-class ClassView(viewsets.ModelViewSet):
-    queryset = Class.objects.all()
-    serializer_class = ClassSerializer
-
 class StudentView(viewsets.ModelViewSet):
     queryset = Student.objects.filter(active=True)
     serializer_class = StudentSerializer
+
+
 
 class TeacherView(viewsets.ModelViewSet):
     queryset = Teacher.objects.filter(active=True)
@@ -109,6 +107,16 @@ class StudentTeacherDetailView(APIView):
         print(mydata)
         return Response(data=mydata.data,status=status.HTTP_200_OK)
 
+class ActivitiesView(viewsets.ModelViewSet):
+    queryset = GeneralActivities.objects.all()
+    serializer_class = GeneralActivitiesSerializer
+
+class ClassDetailView(APIView):
+    def get(self,request,pk):
+        student = Student.objects.filter(Class=pk)
+        print(student)
+        mydata = StudentSerializer(student,many=True)
+        return Response(data=mydata.data,status=status.HTTP_200_OK)
 
 
 
