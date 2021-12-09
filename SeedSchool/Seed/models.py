@@ -36,12 +36,16 @@ class MyModelBase(models.Model):
 
 class Teacher(MyModelBase):
     user = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)
-    Class = models.OneToOneField('Class',on_delete=models.CASCADE,default='')
+
+    def __str__(self):
+        return self.name
 
 
 class Class(models.Model):
     name = models.CharField(max_length=255,unique=True,default='')
-    schedule = models.OneToOneField('Schedule', on_delete=models.CASCADE,blank=True,null=True)
+    teacher = models.OneToOneField('Teacher',on_delete=models.CASCADE,default='')
+    amount = models.IntegerField(default=0,blank=False)
+    teacher_name = models.CharField(max_length=255,default='')
 
 
     def __str__(self):
@@ -54,10 +58,10 @@ class Student(MyModelBase):
     address = models.CharField(max_length=30,default='')
     idteacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='')
     schedule = models.ForeignKey('Schedule',on_delete=models.CASCADE,default='')
-    activities = models.ManyToManyField('GeneralActivities',blank=True,related_name='activities')
-    Class = models.ForeignKey(Class,on_delete=models.CASCADE,default='')
+    classes = models.ForeignKey('Class',on_delete=models.CASCADE,default='')
 
 class Schedule(models.Model):
+    classes = models.OneToOneField('Class', on_delete=models.CASCADE, default='', primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -97,6 +101,14 @@ class GeneralActivities(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     eventdate = models.DateField(default='')
     description = models.CharField(max_length=255, default='')
+
+    def __str__(self):
+        return self.description
+
+class ResigterActivities(models.Model):
+    student = models.ForeignKey('Student',on_delete=models.CASCADE)
+    activities = models.ForeignKey(GeneralActivities,on_delete=models.CASCADE)
+
 
 
 

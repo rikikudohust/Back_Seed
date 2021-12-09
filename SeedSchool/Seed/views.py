@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.decorators import action
-from .models import User,Teacher,Student,Schedule,ScheduleDaily,Class,GeneralActivities
+from .models import User,Teacher,Student,Schedule,ScheduleDaily,Class,GeneralActivities,ResigterActivities
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -10,6 +10,12 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import generics,status
 import jwt,datetime
 
+class RegisterView(APIView):
+    def post(self,request):
+        serializer = UserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 class LoginView(APIView):
     def post(self, request,format=None):
@@ -98,7 +104,6 @@ class StudentTeacherDetailView(APIView):
         data = Student.objects.filter(pk=pk).values('idteacher')
         print(data)
         teacher = data[0]['idteacher']
-        print(teacher)
         teacherdetail = Teacher.objects.filter(user=teacher).first()
         return teacherdetail
     def get(self,request,pk,format=None):
@@ -117,6 +122,19 @@ class ClassDetailView(APIView):
         print(student)
         mydata = StudentSerializer(student,many=True)
         return Response(data=mydata.data,status=status.HTTP_200_OK)
+"""
+class RegisterActivitiesView(APIView):
+    def post(self,request,pk):
+        activities = GeneralActivities.objects.filter(pk=pk).values('id')
+        activitiesid = activities[0]['id']
+        register = ResigterActivities.objects.filter(id=activitiesid).values('student')
+        registerid = register[0]['student']
+        studentlist = Student.objects.filter(user=registerid)
+""" 
+
+
+
+
 
 
 
