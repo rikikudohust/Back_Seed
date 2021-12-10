@@ -1,10 +1,13 @@
 from django.shortcuts import render
 from rest_framework.decorators import action
-from .models import User,Teacher,Student,Schedule,ScheduleDaily,Class,GeneralActivities,ResigterActivities
+from .models import User,Teacher,Student,Schedule,ScheduleDaily,Class,GeneralActivities,ResigterActivities,Attended
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
-from .serializers import UserSerializer,StudentSerializer,ScheduleDailySerializer,TeacherSerializer,ClassSerializer,GeneralActivitiesSerializer,RegisterActivitiesSerializer
+from .serializers import (UserSerializer,StudentSerializer,ScheduleDailySerializer,TeacherSerializer,ClassSerializer,GeneralActivitiesSerializer,RegisterActivitiesSerializer,
+                        AttendSerializer
+                          )
+
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import generics,status
@@ -152,6 +155,22 @@ class RegisterActivitiesView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(data=serializer.data,status=status.HTTP_200_OK)
+
+# class StudentAbsentView(generics.CreateAPIView,generics.ListAPIView):
+    # queryset = Attended.objects.all()
+    # serializer_class = AttendSerializer
+
+class StudentAbsentView(APIView):
+    def post(self,request,pk,format=None):
+        serialzer_data = {
+                "student": pk,
+                "absent": "true"
+            }
+
+        serializer = AttendSerializer(data=serialzer_data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
 
 
