@@ -1,14 +1,15 @@
 from django.db.models import query
 from django.shortcuts import get_object_or_404, render
 from django.utils.translation import activate
-from rest_framework.decorators import action, schema
+from rest_framework.decorators import action, parser_classes, schema
 from .models import User,Teacher,Student,Schedule,ScheduleDaily, Class
 from rest_framework import serializers, viewsets
 from rest_framework.views import APIView
-from .serializers import ClassSerializer, ScheduleSerializer, TeacherSerializer, UserSerializer,StudentSerializer,ScheduleDailySerializer
+from .serializers import ClassSerializer, ScheduleSerializer, TeacherSerializer, UserSerializer,StudentSerializer,ScheduleDailySerializer, AttendSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import generics,status
+from rest_framework.parsers import MultiPartParser, FormParser
 import jwt,datetime
 
 
@@ -187,7 +188,22 @@ class TeacherStudentView(APIView):
         else:
             return Response(serializer_student.errors,status=status.HTTP_400_BAD_REQUEST)
         
+class StudentAttendanceView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+    def post(self, request, pk, format = None):
+        data = request.data
+        data['id'] = pk
+        print(data)
+        serializer = AttendSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+        
 
 
 

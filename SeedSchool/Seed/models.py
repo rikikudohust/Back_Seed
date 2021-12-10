@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models.fields.files import ImageField
 # Create your models here.
 
 
@@ -102,5 +103,23 @@ class GeneralActivities(models.Model):
     eventdate = models.DateField(default='')
     description = models.CharField(max_length=255, default='')
 
+class Attended(models.Model):
+    student = models.IntegerField(default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+    absent = models.BooleanField(default=False)
+    commment = models.CharField(max_length=255,default='',blank=True, null=True)
+    leave = models.DateTimeField(auto_now=True,blank=True, null=True)
+    image = models.ImageField(upload_to='Seed/%Y/%m', default='', blank=True, null=True)
 
+class Thank(models.Model):
+    student = models.ForeignKey(Student,on_delete=models.CASCADE,default='')
+    teacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+    commment = models.CharField(max_length=255, default='')
 
+class Fee(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,default='')
+    totalfee = models.IntegerField(default=0)
+    semester = models.CharField(max_length=255,default='',)
+    tuition = models.IntegerField(default=0)
+    mealfee = models.IntegerField(default=0)

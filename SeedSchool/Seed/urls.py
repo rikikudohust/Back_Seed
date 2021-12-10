@@ -1,5 +1,5 @@
 from django.urls import path,include
-from .views import LoginView,LogoutView, TeacherSchdeduleDailyView, TeacherScheduleView, TeacherStudentView, TeacherView,UserView,StudentView,StudentScheduleView, TeacherClassView
+from .views import LoginView,LogoutView, TeacherSchdeduleDailyView, TeacherScheduleView, TeacherStudentView, TeacherView,UserView,StudentView,StudentScheduleView, TeacherClassView, StudentAttendanceView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -13,6 +13,7 @@ urlpatterns = [
     path('user/',UserView.as_view()),
     path('logout/',LogoutView.as_view()),
     path('students/<int:pk>/schedules',StudentScheduleView.as_view()),
+    path('student/<int:pk>/attendance',StudentAttendanceView.as_view()),
     path('teachers/<int:pk>/class', TeacherClassView.as_view()),
     path('teachers/<int:pk>/students', TeacherStudentView.as_view()),
     path('teachers/<int:pk>/schedules', TeacherScheduleView.as_view()),
