@@ -10,4 +10,5 @@ run:
 install:
 	pip install -r requirements.txt
 
-
+super:
+	python3 SeedSchool/manage.py createsuperuser

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models.fields.files import ImageField
 # Create your models here.
 
 
@@ -46,7 +47,6 @@ class Class(models.Model):
     teacher = models.OneToOneField('Teacher',on_delete=models.CASCADE,default='')
     amount = models.IntegerField(default=0,blank=False)
     teacher_name = models.CharField(max_length=255,default='')
-
 
     def __str__(self):
         return self.name
@@ -95,8 +95,6 @@ class ScheduleDaily(models.Model):
     task = models.CharField(max_length=255,blank=False)
     schedule = models.ForeignKey(Schedule,related_name='Schedule',on_delete=models.CASCADE)
 
-
-
 class GeneralActivities(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     eventdate = models.DateField(default='')
@@ -118,8 +116,6 @@ class Meal(models.Model):
     idmenu = models.ForeignKey(Menu,related_name='menu',on_delete=models.CASCADE)
     name = models.CharField(max_length=255,blank=False)
 
-
-
 class Attended(models.Model):
     student = models.IntegerField(default='')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -128,13 +124,11 @@ class Attended(models.Model):
     leave = models.DateTimeField(auto_now=True,blank=True, null=True)
     image = models.ImageField(upload_to='Seed/%Y/%m', default='', blank=True, null=True)
 
-
 class Thank(models.Model):
     student = models.ForeignKey(Student,on_delete=models.CASCADE,default='')
     teacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='')
     created_at = models.DateTimeField(auto_now_add=True)
     commment = models.CharField(max_length=255, default='')
-
 
 class Fee(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE,default='')
@@ -142,5 +136,3 @@ class Fee(models.Model):
     semester = models.CharField(max_length=255,default='',)
     tuition = models.IntegerField(default=0)
     mealfee = models.IntegerField(default=0)
-
-
