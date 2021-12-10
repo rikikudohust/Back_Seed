@@ -48,18 +48,17 @@ class Class(models.Model):
     amount = models.IntegerField(default=0,blank=False)
     teacher_name = models.CharField(max_length=255,default='')
 
-
     def __str__(self):
         return self.name
 
 class Student(MyModelBase):
     user = models.OneToOneField('User', on_delete=models.CASCADE, default='', primary_key=True)
-    nameparent = models.CharField(max_length=30,default='')
-    phoneparent = models.CharField(max_length=30,default='')
-    address = models.CharField(max_length=30,default='')
-    idteacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='')
-    activities = models.ManyToManyField('GeneralActivities',blank=True,related_name='activities')
-    classes = models.ForeignKey('Class',on_delete=models.CASCADE,default='')
+    nameparent = models.CharField(max_length=30,default='',null=True,blank=True)
+    phoneparent = models.CharField(max_length=30,default='',null=True,blank=True)
+    address = models.CharField(max_length=30,default='',null=True,blank=True)
+    idteacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='',null=True,blank=True)
+    schedule = models.ForeignKey('Schedule',on_delete=models.CASCADE,default='',null=True,blank=True)
+    classes = models.ForeignKey('Class',on_delete=models.CASCADE,default='',null=True,blank=True)
 
 class Schedule(models.Model):
     classes = models.OneToOneField('Class', on_delete=models.CASCADE, default='', primary_key=True)
@@ -96,12 +95,26 @@ class ScheduleDaily(models.Model):
     task = models.CharField(max_length=255,blank=False)
     schedule = models.ForeignKey(Schedule,related_name='Schedule',on_delete=models.CASCADE)
 
-
-
 class GeneralActivities(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     eventdate = models.DateField(default='')
     description = models.CharField(max_length=255, default='')
+
+    def __str__(self):
+        return self.description
+
+class ResigterActivities(models.Model):
+    student = models.ForeignKey('Student',on_delete=models.CASCADE)
+    activities = models.ForeignKey(GeneralActivities,on_delete=models.CASCADE)
+
+class Menu(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    session = models.CharField(max_length=30,blank=False)
+
+class Meal(models.Model):
+    idmenu = models.ForeignKey(Menu,related_name='menu',on_delete=models.CASCADE)
+    name = models.CharField(max_length=255,blank=False)
 
 class Attended(models.Model):
     student = models.IntegerField(default='')
