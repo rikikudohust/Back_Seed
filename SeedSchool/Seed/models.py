@@ -53,12 +53,12 @@ class Class(models.Model):
 
 class Student(MyModelBase):
     user = models.OneToOneField('User', on_delete=models.CASCADE, default='', primary_key=True)
-    nameparent = models.CharField(max_length=30,default='')
-    phoneparent = models.CharField(max_length=30,default='')
-    address = models.CharField(max_length=30,default='')
-    idteacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='')
-    schedule = models.ForeignKey('Schedule',on_delete=models.CASCADE,default='')
-    classes = models.ForeignKey('Class',on_delete=models.CASCADE,default='')
+    nameparent = models.CharField(max_length=30,default='',null=True,blank=True)
+    phoneparent = models.CharField(max_length=30,default='',null=True,blank=True)
+    address = models.CharField(max_length=30,default='',null=True,blank=True)
+    idteacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='',null=True,blank=True)
+    schedule = models.ForeignKey('Schedule',on_delete=models.CASCADE,default='',null=True,blank=True)
+    classes = models.ForeignKey('Class',on_delete=models.CASCADE,default='',null=True,blank=True)
 
 class Schedule(models.Model):
     classes = models.OneToOneField('Class', on_delete=models.CASCADE, default='', primary_key=True)

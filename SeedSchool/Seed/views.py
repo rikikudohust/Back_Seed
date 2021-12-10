@@ -4,18 +4,41 @@ from .models import User,Teacher,Student,Schedule,ScheduleDaily,Class,GeneralAct
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
-from .serializers import UserSerializer,StudentSerializer,ScheduleDailySerializer,TeacherSerializer,ClassSerializer,GeneralActivitiesSerializer
+from .serializers import UserSerializer,StudentSerializer,ScheduleDailySerializer,TeacherSerializer,ClassSerializer,GeneralActivitiesSerializer,RegisterActivitiesSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import generics,status
 import jwt,datetime
 
 class RegisterView(APIView):
+
     def post(self,request):
         serializer = UserSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        if serializer.is_valid():
+            serializer.save()
+            role = serializer.data['role']
+            print('1')
+            if (role == 2 ):
+                student_data = {"user":serializer.data['id'],
+                                "email":serializer.data['email']
+                                }
+                student_serializer = StudentSerializer(data=student_data)
+                if student_serializer.is_valid():
+                    student_serializer.save()
+                    return Response(data=serializer.data, status=status.HTTP_200_OK)
+            elif (role == 1 ):
+                teacher_data = {"user":serializer.data['id'],
+                                "email":serializer.data['email']
+                                }
+                teacher_serializer = TeacherSerializer(data=teacher_data)
+                if teacher_serializer.is_valid():
+                    teacher_serializer.save()
+                    return Response(data=serializer.data,status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
+
+
+
 
 class LoginView(APIView):
     def post(self, request,format=None):
@@ -122,15 +145,13 @@ class ClassDetailView(APIView):
         print(student)
         mydata = StudentSerializer(student,many=True)
         return Response(data=mydata.data,status=status.HTTP_200_OK)
-"""
+
 class RegisterActivitiesView(APIView):
-    def post(self,request,pk):
-        activities = GeneralActivities.objects.filter(pk=pk).values('id')
-        activitiesid = activities[0]['id']
-        register = ResigterActivities.objects.filter(id=activitiesid).values('student')
-        registerid = register[0]['student']
-        studentlist = Student.objects.filter(user=registerid)
-""" 
+    def post(self,request,pk,id,format=None):
+        serializer = RegisterActivitiesSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(data=serializer.data,status=status.HTTP_200_OK)
 
 
 
