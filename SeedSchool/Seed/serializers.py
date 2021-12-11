@@ -1,7 +1,7 @@
 from django.db import models
 from rest_framework import serializers
 from .models import (Menu, User,Student,ScheduleDaily,Teacher,Class,GeneralActivities,ResigterActivities,
-                    Attended, Task
+                    Attended, Task,Admin,Meal,Thank
                      )
 
 class UserSerializer(serializers.ModelSerializer):
@@ -55,6 +55,10 @@ class AttendSerializer(serializers.ModelSerializer):
     class Meta :
         model = Attended
         fields = '__all__'
+class AttendSerializer1(serializers.ModelSerializer):
+    class Meta :
+        model = Attended
+        fields = ['comment']
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
@@ -64,4 +68,20 @@ class TaskSerializer(serializers.ModelSerializer):
 class MenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = Menu
+        exclude = ['created_at', 'updated_at',]
+class AdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Admin
+        exclude = ['created_at', 'updated_at', 'active']
+
+class MealSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Meal
         fields = '__all__'
+
+class ThankSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Thank
+        fields = '__all__'
+
+

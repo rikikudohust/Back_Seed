@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'seedschool',
         'USER': 'root',
-        'PASSWORD': 'secrets',
+        'PASSWORD': 'duc0395322380',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     },

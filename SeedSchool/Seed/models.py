@@ -7,6 +7,7 @@ from django.db.models.fields.files import ImageField
 class User(AbstractUser):
     TEACHER = 1
     STUDENT = 2
+    ADMIN = 3
 
     ROLE_CHOICES = (
         (TEACHER, 'Teacher'),
@@ -34,6 +35,11 @@ class MyModelBase(models.Model):
         return self.name
     class Meta:
         abstract = True
+
+class Admin(MyModelBase):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    def __str__(self):
+        return self.name
 
 class Teacher(MyModelBase):
     user = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)
@@ -128,27 +134,48 @@ class ResigterActivities(models.Model):
     activities = models.ForeignKey(GeneralActivities,on_delete=models.CASCADE)
 
 class Menu(models.Model):
+    Daily = [
+        (0, 'Monday'),
+        (1, 'Tuesday'),
+        (2, 'Wednesday'),
+        (3, 'Thursday'),
+        (4, 'Friday'),
+        (5, 'Saturday'),
+        (6, 'Sunday'),
+    ]
+
+    name = models.IntegerField(choices=Daily, default='0',primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    session = models.CharField(max_length=30,blank=False)
+    image = models.ImageField(upload_to='Seed/%Y/%m', default='', blank=True, null=True)
+
+
 
 class Meal(models.Model):
-    idmenu = models.ForeignKey(Menu,related_name='menu',on_delete=models.CASCADE)
+    Sesion = [
+        (0, 'Breakfast'),
+        (1, 'Lunch'),
+        (2, 'Dinner'),
+    ]
+    sesion = models.IntegerField(choices=Sesion, default='0')
+    menu = models.ForeignKey(Menu,on_delete=models.CASCADE)
     name = models.CharField(max_length=255,blank=False)
+    image = models.ImageField(upload_to='Seed/%Y/%m', default='', blank=True, null=True)
 
 class Attended(models.Model):
     student = models.IntegerField(default='')
     created_at = models.DateTimeField(auto_now_add=True)
     absent = models.BooleanField(default=False)
-    commment = models.CharField(max_length=255,default='',blank=True, null=True)
+    comment = models.CharField(max_length=255,default='',blank=True, null=True)
     leave = models.DateTimeField(auto_now=True,blank=True, null=True)
     image = models.ImageField(upload_to='Seed/%Y/%m', default='', blank=True, null=True)
+    datetime = models.DateField(auto_now=True)
 
 class Thank(models.Model):
     student = models.ForeignKey(Student,on_delete=models.CASCADE,default='')
     teacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='')
     created_at = models.DateTimeField(auto_now_add=True)
-    commment = models.CharField(max_length=255, default='')
+    comment = models.CharField(max_length=255, default='')
 
 class Fee(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE,default='')
@@ -156,3 +183,6 @@ class Fee(models.Model):
     semester = models.CharField(max_length=255,default='',)
     tuition = models.IntegerField(default=0)
     mealfee = models.IntegerField(default=0)
+
+
+
