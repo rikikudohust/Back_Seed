@@ -1,11 +1,12 @@
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from rest_framework.decorators import action
-from .models import User,Teacher,Student,Schedule,ScheduleDaily,Class,GeneralActivities,ResigterActivities,Attended
+from .models import Menu, User,Teacher,Student,ScheduleDaily,Class,GeneralActivities,ResigterActivities,Attended, Task, ResigterActivities
 
-from rest_framework import viewsets
+from rest_framework import serializers, viewsets
 from rest_framework.views import APIView
 from .serializers import (UserSerializer,StudentSerializer,ScheduleDailySerializer,TeacherSerializer,ClassSerializer,GeneralActivitiesSerializer,RegisterActivitiesSerializer,
-                        AttendSerializer
+                        AttendSerializer, TaskSerializer, MenuSerializer
                           )
 
 from rest_framework.response import Response
@@ -14,6 +15,7 @@ from rest_framework import generics,status
 from rest_framework.parsers import MultiPartParser, FormParser
 import jwt,datetime
 
+###################### USER VIEW ############################
 class RegisterView(APIView):
 
     def post(self,request):
@@ -21,27 +23,27 @@ class RegisterView(APIView):
         if serializer.is_valid():
             serializer.save()
             role = serializer.data['role']
-            print('1')
             if (role == 2 ):
                 student_data = {"user":serializer.data['id'],
-                                "email":serializer.data['email']
+                                "email":serializer.data['email'],
+                                "name" : serializer.data['username']
                                 }
                 student_serializer = StudentSerializer(data=student_data)
+                print("here")
                 if student_serializer.is_valid():
                     student_serializer.save()
-                    return Response(data=serializer.data, status=status.HTTP_200_OK)
+                    return Response(data=serializer.data, status=status.HTTP_201_CREATED)
             elif (role == 1 ):
                 teacher_data = {"user":serializer.data['id'],
-                                "email":serializer.data['email']
+                                "email":serializer.data['email'],
+                                "name": serializer.data['username']
                                 }
                 teacher_serializer = TeacherSerializer(data=teacher_data)
                 if teacher_serializer.is_valid():
                     teacher_serializer.save()
-                    return Response(data=serializer.data,status=status.HTTP_200_OK)
+                    return Response(data=serializer.data,status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
-
-
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(APIView):
@@ -94,21 +96,11 @@ class LogoutView(APIView):
         }
         return response
 
-class StudentView(viewsets.ModelViewSet):
-    queryset = Student.objects.filter(active=True)
-    serializer_class = StudentSerializer
-
-
-
-class TeacherView(viewsets.ModelViewSet):
-    queryset = Teacher.objects.filter(active=True)
-    serializer_class = TeacherSerializer
-
-
-class StudentScheduleView(APIView):
-    def get(self,request,pk,format=None):
-        pass
-
+"""
+            ============================
+           |        TEACHER VIEW        |
+            ============================
+"""
 class TeacherView(viewsets.ModelViewSet):
     queryset = Teacher.objects.filter(active=True)
     serializer_class = TeacherSerializer
@@ -116,40 +108,54 @@ class TeacherView(viewsets.ModelViewSet):
 class TeacherScheduleView(APIView):
     def get_object(self, pk):
         classInstance = Class.objects.filter(teacher=pk).first()
-        scheduleInstance = Schedule.objects.filter(classes=classInstance.id).first()      
+        scheduleInstance = ScheduleDaily.objects.filter(classes=classInstance.id)      
         return scheduleInstance
 
     def get(self, request, pk, format=None):
         scheduleInstance = self.get_object(pk)
         if scheduleInstance == None:
             return Response(data={'message':"Not Found"}, status=status.HTTP_404_NOT_FOUND)
-        schedule_serializer = ScheduleSerializer(scheduleInstance)
-        scheduleId = schedule_serializer.data['classes']
-        scheduleDailyList = ScheduleDaily.objects.filter(schedule=scheduleId)
-        serializer = ScheduleDailySerializer(scheduleDailyList, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        schedule_serializer = ScheduleDailySerializer(scheduleInstance, many=True)
+        return Response(data=schedule_serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, pk, format=None):
-        pass
+        classInstance = Class.objects.filter(teacher=pk).first()
+        classId = classInstance.id
+        data = request.data
+        data['classes'] = classId
+        serializer = ScheduleDailySerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class TeacherSchdeduleDailyView(APIView):
+class TeacherScheduleDetailView(APIView):
     def get_object(self, pk, id):
         classInstance = Class.objects.filter(teacher=pk).first()
-        scheduleInstance = Schedule.objects.filter(classes=classInstance.id).first()      
-        schedule_serializer = ScheduleSerializer(scheduleInstance)
-        scheduleId = schedule_serializer.data['classes']
-        scheduleDailyInstance = ScheduleDaily.objects.filter(schedule = scheduleId)
-        return scheduleDailyInstance
+        classId = classInstance.id
+        scheduleDailyInstance = ScheduleDaily.objects.filter(classes=classId, name=id).first()
+        taskList = Task.objects.filter(scheduleDaily= scheduleDailyInstance.id)
+        return taskList
 
     def get(self, request, pk, id, format=None):
-        scheduleDailyInstance = self.get_object(pk, id)
-        serializer = ScheduleDailySerializer(scheduleDailyInstance, many=True)
+        taskList = self.get_object(pk, id)
+        serializer = TaskSerializer(taskList, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
-    def post(self, request, pk, format=None):
-        pass
-
-#Lay thong tin lop cua giao vien
+    def post(self, request, pk,id, format=None):
+        classInstance = Class.objects.filter(teacher=pk).first()
+        classId = classInstance.id
+        scheduleDailyInstance = ScheduleDaily.objects.filter(classes=classId, name=id).first()
+        data = request.data
+        data['scheduleDaily'] = scheduleDailyInstance.id
+        serializer = TaskSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
 class TeacherClassView(APIView):
     def get_object(self, pk):
         classInstance = Class.objects.filter(teacher=pk).first()
@@ -173,17 +179,9 @@ class TeacherClassView(APIView):
         serializer = ClassSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            schedule_data = {"classes": serializer.data['id']}
-            schedule_serializer = ScheduleSerializer(data=schedule_data)
-            if schedule_serializer.is_valid():
-                schedule_serializer.save()
-                return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(schedule_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-
 
     def put(self, request, pk, format=None):
         classInstance = self.get_object(pk)
@@ -209,22 +207,40 @@ class TeacherStudentView(APIView):
         serializer = StudentSerializer(studentListInstance, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
-    def post(self, request, pk, format=None):
+    def put(self, request, pk, format=None):
         data = request.data
         classInstance = Class.objects.filter(teacher=pk).first()
-        scheduleInstance = Schedule.objects.filter(pk=classInstance.id).first()
         studentInstance = Student.objects.filter(email=data['email']).first()
+        if studentInstance == None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = StudentSerializer(studentInstance)
         data = serializer.data
         data['classes'] = classInstance.id
-        data['schedule'] = classInstance.id
-        print(data)
+        data['idteacher'] = pk
         serializer_student = StudentSerializer(studentInstance, data=data)
         if serializer_student.is_valid():
+            serializer_student.save()
             return Response(data=serializer_student.data,status=status.HTTP_200_OK)
         else:
             return Response(serializer_student.errors,status=status.HTTP_400_BAD_REQUEST)
         
+"""
+            ============================
+           |        STUDENT VIEW        |
+            ============================
+"""
+class StudentView(viewsets.ModelViewSet):
+    queryset = Student.objects.filter(active=True)
+    serializer_class = StudentSerializer
+
+class StudentScheduleView(APIView):
+    def get(self,request,pk,format=None):
+        data = Student.objects.filter(pk=pk).values('classes')
+        classId = data[0]['classes']
+        scheduleDailyList = ScheduleDaily.objects.filter(classes=classId)
+        serializer = ScheduleDailySerializer(scheduleDailyList, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class StudentAttendanceView(APIView):
     parser_classes = [MultiPartParser, FormParser]
     def post(self, request, pk, format = None):
@@ -238,58 +254,6 @@ class StudentAttendanceView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-        
-
-
-class StudentScheduleDetailView(APIView):
-    def get_object(self,pk,id,format=None):
-        data = Student.objects.filter(pk=pk).values('schedule')
-        schedule = data[0]['schedule']
-        scheduleDetail = ScheduleDaily.objects.filter(schedule=schedule,name=id)
-        return scheduleDetail
-
-    def get(self,request,pk,id,format=None):
-        scheduleDetails = self.get_object(pk,id)
-        serializer = ScheduleDailySerializer(scheduleDetails,many=True)
-        return Response(data=serializer.data,status=status.HTTP_200_OK)
-
-class StudentTeacherDetailView(APIView):
-    def get_object(self,pk,format=None):
-        data = Student.objects.filter(pk=pk).values('idteacher')
-        print(data)
-        teacher = data[0]['idteacher']
-        teacherdetail = Teacher.objects.filter(user=teacher).first()
-        return teacherdetail
-    def get(self,request,pk,format=None):
-        teacherdetail = self.get_object(pk)
-        mydata = TeacherSerializer(teacherdetail)
-        print(mydata)
-        return Response(data=mydata.data,status=status.HTTP_200_OK)
-
-class ActivitiesView(viewsets.ModelViewSet):
-    queryset = GeneralActivities.objects.all()
-    serializer_class = GeneralActivitiesSerializer
-
-class ClassDetailView(APIView):
-    def get(self,request,pk):
-        student = Student.objects.filter(Class=pk)
-        print(student)
-        mydata = StudentSerializer(student,many=True)
-        return Response(data=mydata.data,status=status.HTTP_200_OK)
-
-class RegisterActivitiesView(APIView):
-    def post(self,request,pk,id,format=None):
-        serializer = RegisterActivitiesSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(data=serializer.data,status=status.HTTP_200_OK)
-
-# class StudentAbsentView(generics.CreateAPIView,generics.ListAPIView):
-    # queryset = Attended.objects.all()
-    # serializer_class = AttendSerializer
-
 class StudentAbsentView(APIView):
     def post(self,request,pk,format=None):
         serialzer_data = {
@@ -302,10 +266,70 @@ class StudentAbsentView(APIView):
         serializer.save()
         return Response(serializer.data,status=status.HTTP_200_OK)
 
+class StudentScheduleDetailView(APIView):
+    def get_object(self,pk,id,format=None):
+        data = Student.objects.filter(pk=pk).values('classes')
+        classId = data[0]['classes']
+        scheduleDetail = ScheduleDaily.objects.filter(classes=classId,name=id).first()
+        return scheduleDetail
+
+    def get(self,request,pk,id,format=None):
+        scheduleDetails = self.get_object(pk,id)
+        taskInstance = Task.objects.filter(scheduleDaily=scheduleDetails.id)
+        serializer = TaskSerializer(taskInstance,many=True)
+        return Response(data=serializer.data,status=status.HTTP_200_OK)
+
+class StudentTeacherDetailView(APIView):
+    def get_object(self,pk,format=None):
+        data = Student.objects.filter(pk=pk).values('idteacher')
+        teacher = data[0]['idteacher']
+        teacherdetail = Teacher.objects.filter(user=teacher).firsngàyt()
+        return teacherdetail
+    def get(self,request,pk,format=None):
+        teacherdetail = self.get_object(pk)
+        mydata = TeacherSerializer(teacherdetail)
+        return Response(data=mydata.data,status=status.HTTP_200_OK)
+
+################################# ACTIVITIES VIEW #################################
+class ActivitiesView(viewsets.ModelViewSet):
+    queryset = GeneralActivities.objects.all()
+    serializer_class = GeneralActivitiesSerializer
+
+class RegisterActivitiesView(APIView):
+    def post(self,request,pk,id,format=None):
+        data = {
+            "student": pk,
+            "activities": id
+        }
+        serializer = RegisterActivitiesSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(data=serializer.data,status=status.HTTP_200_OK)
+
+class ListRegisterActivitiesView(APIView):
+    def get(self, request, pk, format=None):
+        activitiesList = ResigterActivities.objects.filter(student=pk)
+        serializer = RegisterActivitiesSerializer(activitiesList, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        
+############################# Class View ##############################
+class ClassDetailView(APIView):
+    def get(self,request,pk):
+        classQuery = Student.objects.filter(pk=pk).values('classes')
+        classId = classQuery[0]['classes']
+        classInstance = Class.objects.filter(pk=classId).first()
+        serializer = ClassSerializer(classInstance)
+        return Response(data=serializer.data,status=status.HTTP_200_OK)
+
+class ClassView(viewsets.ModelViewSet):
+    queryset = Class.objects.all()
+    serializer_class = ClassSerializer
 
 
-
-
+######################### Menu View ################################
+class MenuView(viewsets.ModelViewSet):
+    queryset = Menu.objects.all()
+    serializer_class = MenuSerializer
 
 
 

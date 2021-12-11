@@ -1,6 +1,7 @@
+from django.db import models
 from rest_framework import serializers
-from .models import (User,Student,ScheduleDaily,Teacher,Class,GeneralActivities,ResigterActivities,
-                    Attended
+from .models import (Menu, User,Student,ScheduleDaily,Teacher,Class,GeneralActivities,ResigterActivities,
+                    Attended, Task
                      )
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,13 +29,8 @@ class StudentSerializer(serializers.ModelSerializer):
 class ScheduleDailySerializer(serializers.ModelSerializer):
     class Meta:
         model = ScheduleDaily
-        fields = '__all__'
-    
-class ScheduleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Schedule
         exclude = ['created_at','updated_at']
-
+    
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
@@ -58,4 +54,14 @@ class RegisterActivitiesSerializer(serializers.ModelSerializer):
 class AttendSerializer(serializers.ModelSerializer):
     class Meta :
         model = Attended
+        fields = '__all__'
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = '__all__'
+
+class MenuSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Menu
         fields = '__all__'

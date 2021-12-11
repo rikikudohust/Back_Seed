@@ -57,13 +57,13 @@ class Student(MyModelBase):
     phoneparent = models.CharField(max_length=30,default='',null=True,blank=True)
     address = models.CharField(max_length=30,default='',null=True,blank=True)
     idteacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='',null=True,blank=True)
-    schedule = models.ForeignKey('Schedule',on_delete=models.CASCADE,default='',null=True,blank=True)
+    # schedule = models.ForeignKey('Schedule',on_delete=models.CASCADE,default='',null=True,blank=True)
     classes = models.ForeignKey('Class',on_delete=models.CASCADE,default='',null=True,blank=True)
 
-class Schedule(models.Model):
-    classes = models.OneToOneField('Class', on_delete=models.CASCADE, default='', primary_key=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+# class Schedule(models.Model):
+#     classes = models.OneToOneField('Class', on_delete=models.CASCADE, default='', primary_key=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
 
 
 class ScheduleDaily(models.Model):
@@ -76,6 +76,27 @@ class ScheduleDaily(models.Model):
         (5, 'Saturday'),
         (6, 'Sunday'),
     ]
+    # Time = [
+    #     (0, '0'),
+    #     (1, '1'),
+    #     (2, '2'), (3, '3'),
+    #     (4, '4'),
+    #     (5, '5'),
+    #     (6, '6'), (8, '8'),
+    #     (9, '9'),(10, '10'),
+    #     (7, '7'),(11, '11'),(12, '12'),
+
+    # ]
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    name = models.IntegerField(choices=Daily,default='0')
+    # time_start = models.IntegerField(choices=Time,default='0')
+    # time_finish = models.IntegerField(choices=Time, default='0')
+    # task = models.CharField(max_length=255,blank=False)
+    # schedule = models.ForeignKey(Schedule,related_name='Schedule',on_delete=models.CASCADE)
+    classes = models.ForeignKey('Class', on_delete=models.CASCADE)
+
+class Task(models.Model):
     Time = [
         (0, '0'),
         (1, '1'),
@@ -85,20 +106,19 @@ class ScheduleDaily(models.Model):
         (6, '6'), (8, '8'),
         (9, '9'),(10, '10'),
         (7, '7'),(11, '11'),(12, '12'),
-
     ]
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    name = models.IntegerField(choices=Daily,default='0')
+    scheduleDaily = models.ForeignKey('ScheduleDaily', on_delete=models.CASCADE)
+    # name = models.IntegerField(choices=Daily,default='0')
     time_start = models.IntegerField(choices=Time,default='0')
     time_finish = models.IntegerField(choices=Time, default='0')
-    task = models.CharField(max_length=255,blank=False)
-    schedule = models.ForeignKey(Schedule,related_name='Schedule',on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, default='')
 
 class GeneralActivities(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     eventdate = models.DateField(default='')
     description = models.CharField(max_length=255, default='')
+    title = models.CharField(max_length=255, default='')
+    is_register = models.BooleanField(default=True)
 
     def __str__(self):
         return self.description
