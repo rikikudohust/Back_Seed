@@ -1,7 +1,7 @@
 from django.urls import path,include
 from .views import (LoginView,LogoutView, StudentView#UserView
                     , StudentScheduleView, StudentScheduleDetailView
-                    , StudentTeacherDetailView, TeacherView, ActivitiesView
+                    , StudentTeacherDetailView, TaskView, TeacherView, ActivitiesView
                     , RegisterActivitiesView, ClassDetailView
                     , RegisterView, StudentAbsentView, StudentAttendanceView
                     , TeacherClassView, TeacherStudentView
@@ -15,6 +15,7 @@ router.register('students',StudentView)
 router.register('teachers',TeacherView)
 router.register('classes',ClassView)
 router.register('activities',ActivitiesView)
+router.register('taskes',TaskView)
 urlpatterns = [
 
     path('register/', RegisterView.as_view()),
@@ -50,8 +51,6 @@ urlpatterns = [
 
     path('activities/post',UpdateActivitiesView.as_view()),
     path('activities/<int:pk>/update',UpdateDetailView.as_view()),
-
-
 
 
 ]

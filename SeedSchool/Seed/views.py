@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.decorators import action
 from .models import Menu, User,Teacher,Student,ScheduleDaily,Class,GeneralActivities,ResigterActivities,Attended, Task, ResigterActivities,Meal,Thank
 
-from rest_framework import viewsets
+from rest_framework import serializers, viewsets
 from rest_framework.views import APIView
 from .serializers import (UserSerializer,StudentSerializer,ScheduleDailySerializer,TeacherSerializer,ClassSerializer,GeneralActivitiesSerializer,RegisterActivitiesSerializer,
                         AttendSerializer, TaskSerializer, MenuSerializer,MealSerializer,AttendSerializer1,ThankSerializer
@@ -478,6 +478,9 @@ class DeleteDetailView(APIView):
         meallist.delete()
         return Response("delete success")
 
+class TaskView(viewsets.ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer    
 
 
 
