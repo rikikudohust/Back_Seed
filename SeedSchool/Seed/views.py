@@ -14,6 +14,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import generics,status
 from rest_framework.parsers import MultiPartParser, FormParser
 import jwt,datetime
+from datetime import date
 
 
 ###################### USER VIEW ############################
@@ -293,19 +294,19 @@ class StudentScheduleView(APIView):
         serializer = ScheduleDailySerializer(scheduleDailyList,many=True)
         return Response(serializer.data,status=status.HTTP_204_NO_CONTENT)
 
+class GetAttendanceStudent(APIView):
+
+    def post(self, request, pk, format=None):
+        data = request.data
+        student = Attended.objects.filter(student=pk, datetime=data['date']).first()
+        serializer = AttendSerializer(student)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class StudentAttendanceView(APIView):
     def get_object(self,request, pk, format=None):
         data = request.data
         student = Attended.objects.filter(student=pk, datetime=data['date']).first()
         return student
-
-    def get(self,request,pk,format=None):
-        data = request.data
-        student = Attended.objects.filter(student=pk,datetime=data['date']).first()
-        serializer = AttendSerializer(student)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 
     def post(self, request, pk, format = None):
@@ -366,7 +367,7 @@ class StudentTeacherDetailView(APIView):
         return Response(data=mydata.data,status=status.HTTP_200_OK)
 
 ################################# ACTIVITIES VIEW #################################
-class ActivitiesView(viewsets.ViewSet,generics.ListAPIView,generics.DestroyAPIView,generics.RetrieveAPIView):
+class ActivitiesView(viewsets.ViewSet,generics.DestroyAPIView,generics.RetrieveAPIView):
     queryset = GeneralActivities.objects.all()
     serializer_class = GeneralActivitiesSerializer
 
@@ -374,6 +375,10 @@ class ActivitiesView(viewsets.ViewSet,generics.ListAPIView,generics.DestroyAPIVi
 
 class UpdateActivitiesView(APIView):
     parser_classes = [MultiPartParser,FormParser]
+    def get(self,request,format=None):
+        serializerdata = GeneralActivities.objects.all()
+        serializer = GeneralActivitiesSerializer(serializerdata,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
     def post(self,request,format=None):
         serializer = GeneralActivitiesSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

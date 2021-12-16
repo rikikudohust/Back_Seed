@@ -171,7 +171,7 @@ class Attended(models.Model):
     comment = models.CharField(max_length=255,default='',blank=True, null=True)
     leave = models.DateTimeField(auto_now=True,blank=True, null=True)
     image = models.ImageField(upload_to='Seed/%Y/%m', default='', blank=True, null=True)
-    datetime = models.DateField(auto_now=True)
+    datetime = models.DateField(auto_now_add=True)
 
 class Thank(models.Model):
     student = models.ForeignKey(Student,on_delete=models.CASCADE,default='')
