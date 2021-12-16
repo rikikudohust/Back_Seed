@@ -373,18 +373,20 @@ class ActivitiesView(viewsets.ViewSet,generics.ListAPIView,generics.DestroyAPIVi
 
 
 class UpdateActivitiesView(APIView):
+    parser_classes = [MultiPartParser,FormParser]
     def post(self,request,format=None):
         serializer = GeneralActivitiesSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_200_OK)
 
+class UpdateDetailView(APIView):
     def get_object(self,pk,format=None):
-        return GeneralActivitiesSerializer.objects.get(pk=pk)
+        return GeneralActivities.objects.get(pk=pk)
 
     def put(self,request,pk,format=None):
         activities = self.get_object(pk)
-        serializer = StudentSerializer(activities,data=request.data)
+        serializer = GeneralActivitiesSerializer(activities,data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_200_OK)

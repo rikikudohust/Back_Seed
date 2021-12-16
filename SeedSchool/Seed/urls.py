@@ -6,7 +6,7 @@ from .views import (LoginView,LogoutView, StudentView#UserView
                     , RegisterView, StudentAbsentView, StudentAttendanceView
                     , TeacherClassView, TeacherStudentView
                     , TeacherScheduleView, TeacherScheduleDetailView
-                    , RegisterActivitiesView, ListRegisterActivitiesView,TeacherThankView,UpdateActivitiesView
+                    , RegisterActivitiesView, ListRegisterActivitiesView,TeacherThankView,UpdateActivitiesView,UpdateDetailView
                     , ClassView,MenuView,MenuDetailView,MenuDetailSessionView,DeleteDetailView,UpdateStudentView,UpdateTeacherView)
 from rest_framework.routers import DefaultRouter
 
@@ -48,6 +48,8 @@ urlpatterns = [
     path('meal/<int:pk>', DeleteDetailView.as_view()),
 
     path('activities/post',UpdateActivitiesView.as_view()),
+    path('activities/<int:pk>/update',UpdateDetailView.as_view()),
+
 
 
 
