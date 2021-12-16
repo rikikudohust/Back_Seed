@@ -12,6 +12,7 @@ class User(AbstractUser):
     ROLE_CHOICES = (
         (TEACHER, 'Teacher'),
         (STUDENT, 'Student'),
+        (ADMIN,'Admin'),
     )
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, blank=True, null=True)
 
@@ -125,6 +126,7 @@ class GeneralActivities(models.Model):
     description = models.CharField(max_length=255, default='')
     title = models.CharField(max_length=255, default='')
     is_register = models.BooleanField(default=True)
+    image = models.ImageField(upload_to='Seed/activities/%Y/%m', default='', blank=True, null=True)
 
     def __str__(self):
         return self.description
