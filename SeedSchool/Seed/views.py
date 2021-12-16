@@ -269,7 +269,7 @@ class TeacherThankView(APIView):
            |        STUDENT VIEW        |
             ============================
 """
-class StudentView(viewsets.ViewSet,generics.ListAPIView,generics.RetrieveAPIView,generics.DestroyAPIView):
+class StudentView(viewsets.ViewSet,generics.ListAPIView,generics.DestroyAPIView):
     queryset = Student.objects.filter(active=True)
     serializer_class = StudentSerializer
 
@@ -277,6 +277,11 @@ class UpdateStudentView(APIView):
 
     def get_object(self,pk):
         return Student.objects.get(pk=pk)
+
+    def get(self,request,pk,format=None):
+        student = self.get_object(pk)
+        serializer = StudentSerializer(student)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self,request,pk,format=None):
         student = self.get_object(pk)
