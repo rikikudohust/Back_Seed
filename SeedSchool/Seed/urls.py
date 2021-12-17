@@ -11,7 +11,7 @@ from .views import (LoginView,LogoutView, StudentView#UserView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register('students',StudentView)
+
 router.register('teachers',TeacherView)
 router.register('classes',ClassView)
 router.register('activities',ActivitiesView)
@@ -24,7 +24,8 @@ urlpatterns = [
     path('logout/',LogoutView.as_view()),
    # path('users/',UserView.as_view()),
 
-    path('students/<int:pk>/update',UpdateStudentView.as_view()),
+    path('students',StudentView.as_view()),
+    path('students/<int:pk>',UpdateStudentView.as_view()),
     path('students/<int:pk>/schedules',StudentScheduleView.as_view()),
     path('students/<int:pk>/schedules/<int:id>',StudentScheduleDetailView.as_view()),
     path('students/<int:pk>/teachers',StudentTeacherDetailView.as_view()),
