@@ -25,7 +25,7 @@ urlpatterns = [
    # path('users/',UserView.as_view()),
 
     path('students',StudentView.as_view()),
-    path('students/<int:pk>',UpdateStudentView.as_view()),
+    path('students/<int:pk>/update',UpdateStudentView.as_view()),
     path('students/<int:pk>/schedules',StudentScheduleView.as_view()),
     path('students/<int:pk>/schedules/<int:id>',StudentScheduleDetailView.as_view()),
     path('students/<int:pk>/teachers',StudentTeacherDetailView.as_view()),
