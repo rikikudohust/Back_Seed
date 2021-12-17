@@ -114,20 +114,35 @@ class LogoutView(APIView):
            |        TEACHER VIEW        |
             ============================
 """
-class TeacherView(viewsets.ViewSet,generics.ListAPIView,generics.DestroyAPIView,generics.RetrieveAPIView):
 
-    queryset = Teacher.objects.filter(active=True)
-    serializer_class = TeacherSerializer
+
+class TeacherView(APIView):
+    def get(self,request,format=None):
+        teacher = Teacher.objects.filter(active=True)
+        serializer = TeacherSerializer(teacher,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
 
 class UpdateTeacherView(APIView):
     def get_object(self,pk):
         return Teacher.objects.get(pk=pk)
+
+    def get(self,request,pk,format=None):
+        teacher = self.get_object(pk)
+        serializer = TeacherSerializer(teacher)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def put(self,request,pk,format=None):
         teacher = self.get_object(pk)
         serializer = TeacherSerializer(teacher,data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_200_OK)
+
+    def delete(self,request,pk,format=None):
+        teacher = self.get_object(pk)
+        teacher.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class TeacherScheduleView(APIView):
     def get_object(self, pk):
