@@ -24,7 +24,7 @@ urlpatterns = [
     path('logout/',LogoutView.as_view()),
    # path('users/',UserView.as_view()),
 
-    path('students',StudentView.as_view()),
+    path('students/',StudentView.as_view()),
     path('students/<int:pk>/update',UpdateStudentView.as_view()),
     path('students/<int:pk>/schedules',StudentScheduleView.as_view()),
     path('students/<int:pk>/schedules/<int:id>',StudentScheduleDetailView.as_view()),
@@ -36,7 +36,7 @@ urlpatterns = [
     path('students/<int:pk>/attend', GetAttendanceStudent.as_view()),
     path('students/<int:pk>/class', ClassDetailView.as_view()),
 
-    path('teachers',TeacherView.as_view()),
+    path('teachers/',TeacherView.as_view()),
     path('teachers/<int:pk>/update',UpdateTeacherView.as_view()),
     path('teachers/<int:pk>/class', TeacherClassView.as_view()),
     path('teachers/<int:pk>/students', TeacherStudentView.as_view()),
