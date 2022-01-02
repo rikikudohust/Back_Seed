@@ -127,11 +127,17 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES':[
+#         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+#     ]
+# }
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'Seed.User'
+
 MEDIA_ROOT = '%s/Seed/static/' % BASE_DIR
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
