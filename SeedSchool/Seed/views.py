@@ -17,9 +17,9 @@ from django.contrib.auth.models import Group
 
 
 ###################### GROUP ############################
-student_group, created = Group.objects.get_or_create(name='Student')
-admin_group, created = Group.objects.get_or_create(name='Admin')
-teacher_group, created = Group.objects.get_or_create(name='Teacher')
+# student_group, created = Group.objects.get_or_create(name='Student')
+# admin_group, created = Group.objects.get_or_create(name='Admin')
+# teacher_group, created = Group.objects.get_or_create(name='Teacher')
 
 
 ###################### USER VIEW ############################
@@ -32,7 +32,7 @@ class RegisterView(APIView):
             role = serializer.data['role']
             if (role == 2 ):
                 user = User.objects.filter(role=role).first()
-                student_group.user_set.add(user)
+                #student_group.user_set.add(user)
                 student_data = {"user":serializer.data['id'],
                                 "email":serializer.data['email'],
                                 "name" : serializer.data['username']
@@ -43,7 +43,7 @@ class RegisterView(APIView):
                     return Response(data=serializer.data, status=status.HTTP_201_CREATED)
             elif (role == 1 ):
                 user = User.objects.filter(role=role).first()
-                teacher_group.user_set.add(user)
+                #teacher_group.user_set.add(user)
                 teacher_data = {"user":serializer.data['id'],
                                 "email":serializer.data['email'],
                                 "name": serializer.data['username']
@@ -54,7 +54,7 @@ class RegisterView(APIView):
                     return Response(data=serializer.data,status=status.HTTP_201_CREATED)
             elif (role ==3 ):
                 user = User.objects.filter(role=role).first()
-                admin_group.user_set.add(user)
+                #admin_group.user_set.add(user)
                 admin_data = {"user": serializer.data['id'],
                                 "email": serializer.data['email'],
                                 "name": serializer.data['username']
@@ -65,7 +65,6 @@ class RegisterView(APIView):
                     return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
 
 class LoginView(APIView):
     def post(self, request,format=None):
@@ -78,14 +77,12 @@ class LoginView(APIView):
             raise AuthenticationFailed('User is not found!!')
         if not user.check_password(password):
             raise AuthenticationFailed('Incorrect password!')
-
         payload = {
             'id': user.id,
             'role':user.role,
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
             'iat': datetime.datetime.utcnow()
         }
-
         token = jwt.encode(payload, 'secret', algorithm='HS256')
         response = Response()
         response.set_cookie(key='jwt', value=token, httponly=True)
@@ -95,21 +92,6 @@ class LoginView(APIView):
             'role':user.role
         }
         return response
-
-# class UserView(APIView):
-#     def get(self,request):
-#         token = request.COOKIES.get('jwt')
-#         if not token:
-#             raise AuthenticationFailed ('Unauthenicated!')
-#         try:
-#             payload = jwt.decode(token,'secret',algorithms=['HS256'])
-#         except jwt.ExpiredSignatureError:
-#             raise AuthenticationFailed ('Unauthenicated!')
-#         user = User.objects.filter(id=payload['id']).first()
-#         serializer = UserSerializer(user)
-#         return Response(serializer.data)
-
-
 class LogoutView(APIView):
     def post(self,request):
         response = Response()
@@ -135,41 +117,48 @@ class TeacherView(APIView):
 
 
 class TeacherDetailView(APIView):
-    def get_object(self,pk):
-        return Teacher.objects.get(pk=pk)
+    def get_object(self,request):
+        token = request.COOKIES.get('jwt')
+        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        teacher = Teacher.objects.filter(user_id=payload['id']).first()
+        return teacher
 
-    def get(self,request,pk,format=None):
-        teacher = self.get_object(pk)
+    def get(self,request,format=None):
+        teacher = self.get_object(request)
         serializer = TeacherSerializer(teacher)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self,request,pk,format=None):
-        teacher = self.get_object(pk)
+    def put(self,request,format=None):
+        teacher = self.get_object(request)
         serializer = TeacherSerializer(teacher,data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_200_OK)
 
-    def delete(self,request,pk,format=None):
-        teacher = self.get_object(pk)
+    def delete(self,request,format=None):
+        teacher = self.get_object(request)
         teacher.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class TeacherScheduleView(APIView):
-    def get_object(self, pk):
-        classInstance = Class.objects.filter(teacher=pk).first()
+    def get_object(self, request):
+        token = request.COOKIES.get('jwt')
+        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        classInstance = Class.objects.filter(teacher=payload['id']).first()
         scheduleInstance = ScheduleDaily.objects.filter(classes=classInstance.id)      
         return scheduleInstance
 
-    def get(self, request, pk, format=None):
-        scheduleInstance = self.get_object(pk)
+    def get(self, request, format=None):
+        scheduleInstance = self.get_object(request)
         if scheduleInstance == None:
             return Response(data={'message':"Not Found"}, status=status.HTTP_404_NOT_FOUND)
         schedule_serializer = ScheduleDailySerializer(scheduleInstance, many=True)
         return Response(data=schedule_serializer.data, status=status.HTTP_200_OK)
     
-    def post(self, request, pk, format=None):
-        classInstance = Class.objects.filter(teacher=pk).first()
+    def post(self, request, format=None):
+        token = request.COOKIES.get('jwt')
+        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        classInstance = Class.objects.filter(teacher=payload['id']).first()
         classId = classInstance.id
         data = request.data
         data['classes'] = classId
@@ -181,20 +170,24 @@ class TeacherScheduleView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class TeacherScheduleDetailView(APIView):
-    def get_object(self, pk, id):
-        classInstance = Class.objects.filter(teacher=pk).first()
+    def get_object(self,request, id):
+        token = request.COOKIES.get('jwt')
+        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        classInstance = Class.objects.filter(teacher=payload['id']).first()
         classId = classInstance.id
         scheduleDailyInstance = ScheduleDaily.objects.filter(classes=classId, name=id).first()
         taskList = Task.objects.filter(scheduleDaily= scheduleDailyInstance.id)
         return taskList
 
-    def get(self, request, pk, id, format=None):
-        taskList = self.get_object(pk, id)
+    def get(self, request, id, format=None):
+        taskList = self.get_object(request, id)
         serializer = TaskSerializer(taskList, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
-    def post(self, request, pk,id, format=None):
-        classInstance = Class.objects.filter(teacher=pk).first()
+    def post(self, request,id, format=None):
+        token = request.COOKIES.get('jwt')
+        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        classInstance = Class.objects.filter(teacher=payload['id']).first()
         classId = classInstance.id
         scheduleDailyInstance = ScheduleDaily.objects.filter(classes=classId, name=id).first()
         data = request.data
@@ -207,25 +200,29 @@ class TeacherScheduleDetailView(APIView):
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
 class TeacherClassView(APIView):
-    def get_object(self, pk):
-        classInstance = Class.objects.filter(teacher=pk).first()
+    def get_object(self, request):
+        token = request.COOKIES.get('jwt')
+        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        classInstance = Class.objects.filter(teacher=payload['id']).first()
         return classInstance
 
-    def get(self, request, pk, format=None):
-        classInstance = self.get_object(pk)
+    def get(self, request, format=None):
+        classInstance = self.get_object(request)
         if classInstance:
-            classInstance = self.get_object(pk)
+            classInstance = self.get_object(request)
             serializer = ClassSerializer(classInstance)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(data={'message':'Not Found'},status=status.HTTP_404_NOT_FOUND)
 
-    def post(self, request, pk, format=None):
-        classInstance = self.get_object(pk)
+    def post(self, request, format=None):
+        token = request.COOKIES.get('jwt')
+        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        classInstance = self.get_object(request)
         if not classInstance == None:
             return Response(data= {'message':"Class Exited"}, status=status.HTTP_400_BAD_REQUEST)
         data = request.data
-        data['teacher'] = pk
+        data['teacher'] = payload['id']
         serializer = ClassSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -233,8 +230,8 @@ class TeacherClassView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, pk, format=None):
-        classInstance = self.get_object(pk)
+    def put(self, request, format=None):
+        classInstance = self.get_object(request)
         serializer = ClassSerializer(classInstance, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -242,31 +239,35 @@ class TeacherClassView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, pk, format=None):
-        classInstance = self.get_object(pk)
+    def delete(self, request, format=None):
+        classInstance = self.get_object(request)
         classInstance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class TeacherStudentView(APIView):
-    def get_object(self, pk):
-        studentListInstance = Student.objects.filter(idteacher=pk)
+    def get_object(self, request):
+        token = request.COOKIES.get('jwt')
+        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        studentListInstance = Student.objects.filter(idteacher=payload['id'])
         return studentListInstance
     
-    def get(self, request, pk, format=None):
-        studentListInstance = self.get_object(pk)
+    def get(self, request, format=None):
+        studentListInstance = self.get_object(request)
         serializer = StudentSerializer(studentListInstance, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
-    def put(self, request, pk, format=None):
+    def put(self, request, format=None):
+        token = request.COOKIES.get('jwt')
+        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
         data = request.data
-        classInstance = Class.objects.filter(teacher=pk).first()
+        classInstance = Class.objects.filter(teacher=payload['id']).first()
         studentInstance = Student.objects.filter(email=data['email']).first()
         if studentInstance == None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = StudentSerializer(studentInstance)
         data = serializer.data
         data['classes'] = classInstance.id
-        data['idteacher'] = pk
+        data['idteacher'] = payload['id']
         serializer_student = StudentSerializer(studentInstance, data=data)
         if serializer_student.is_valid():
             serializer_student.save()
@@ -285,6 +286,7 @@ class TeacherThankView(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def get(self,request,pk,format=None):
+
         teacher = Thank.objects.filter(teacher=pk)
         serializer = ThankSerializer(teacher,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
@@ -341,7 +343,7 @@ class StudentScheduleView(APIView):
 
 class GetAttendanceStudent(APIView):
 
-    def post(self, request, format=None):
+    def get(self, request, format=None):
         data = request.data
         token = request.COOKIES.get('jwt')
         payload = jwt.decode(token, 'secret', algorithms=['HS256'])
@@ -350,19 +352,15 @@ class GetAttendanceStudent(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class StudentAttendanceView(APIView):
-    def get_object(self,request, format=None):
+    def get_object(self,request,pk, format=None):
         data = request.data
-        token = request.COOKIES.get('jwt')
-        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-        student = Attended.objects.filter(student=payload['id'], datetime=data['date']).first()
+        student = Attended.objects.filter(student=pk, datetime=data['date']).first()
         return student
 
 
-    def post(self, request, format = None):
+    def post(self, request,pk, format = None):
         data = request.data
-        token = request.COOKIES.get('jwt')
-        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-        data['student'] = payload['id']
+        data['student'] = pk
         serializer = AttendSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -372,8 +370,8 @@ class StudentAttendanceView(APIView):
 
 
 
-    def put(self,request,format=None):
-        student = self.get_object(request)
+    def put(self,request,pk,format=None):
+        student = self.get_object(request,pk)
         serializer = AttendSerializer1(student, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
