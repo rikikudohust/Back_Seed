@@ -9,7 +9,7 @@ services:
        - todo-mysql-data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: duc0395322380 
-      MYSQL_DB: seedschool
+      MYSQL_DATABASE: seedschool
 
 volumes:
   todo-mysql-data:

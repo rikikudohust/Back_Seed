@@ -1,9 +1,6 @@
 from django.db import models
 from rest_framework import serializers
-from .models import (Menu, User,Student,ScheduleDaily,Teacher,Class,GeneralActivities,ResigterActivities,
-                    Attended, Task,Admin,Meal,Thank
-                     )
-
+from .models import *
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -24,12 +21,6 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         exclude = ['created_at','updated_at','active',]
-
-
-class ScheduleDailySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ScheduleDaily
-        exclude = ['created_at','updated_at']
     
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,7 +39,7 @@ class GeneralActivitiesSerializer(serializers.ModelSerializer):
 
 class RegisterActivitiesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ResigterActivities
+        model = RegisterActivities
         fields = '__all__'
 
 class AttendSerializer(serializers.ModelSerializer):
@@ -84,4 +75,34 @@ class ThankSerializer(serializers.ModelSerializer):
         model = Thank
         fields = '__all__'
 
+class NewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = News
+        fields = "__all__"
+  
+class PersonalNewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PersonalNews
+        fields = "__all__"
+
+class ClassNewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClassNews
+        fields = "__all__"
+  
+class GeneralNewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GeneralNews
+        fields = "__all__"
+
+class FeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Fee
+        fields = '__all__'
+
+class BasicFeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BasicFee
+        fields = '__all__'
+  
 

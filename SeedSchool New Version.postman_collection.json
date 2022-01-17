@@ -1,0 +1,1442 @@
+{
+	"info": {
+		"_postman_id": "ec43ab23-69e3-464f-95ff-4bd88eec3848",
+		"name": "SeedSchool New Version",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Dành cho Phụ Huynh",
+			"item": [
+				{
+					"name": "Xem thông tin cá nhân",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/students/profile",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"students",
+								"profile"
+							]
+						},
+						"description": "Trả về thông tin cá nhân\n\nVí dụ:\n\n{ \"user\": 1, \"name\": \"student1\", \"email\": \"student1@gmail.com\", \"sex\": 0, \"avatar\": **null**, \"age\": 0, \"nameparent\": \"\", \"phoneparent\": \"\", \"address\": \"\", \"idteacher\": **null**, \"classes\": **null**}"
+					},
+					"response": []
+				},
+				{
+					"name": "Xem thời khóa biểu trong tuần",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/students/schedules",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"students",
+								"schedules"
+							]
+						},
+						"description": "Sẽ trả về danh sách các task trong tuần"
+					},
+					"response": []
+				},
+				{
+					"name": "Cập nhật thông tin cá nhân",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "name",
+									"value": "Nguyen Trung Hieu",
+									"type": "default"
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/home/rikikudohust/Pictures/abc.png"
+								},
+								{
+									"key": "sex",
+									"value": "0",
+									"type": "default"
+								},
+								{
+									"key": "nameparent",
+									"value": "Nguyen Van A",
+									"type": "default"
+								},
+								{
+									"key": "phoneparent",
+									"value": "123455788",
+									"type": "default"
+								},
+								{
+									"key": "address",
+									"value": "so 5 ngo 75 kim nguu",
+									"type": "default"
+								},
+								{
+									"key": "email",
+									"value": "student1@gmail.com",
+									"type": "default"
+								},
+								{
+									"key": "age",
+									"value": "18",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/students/profile",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"students",
+								"profile"
+							]
+						},
+						"description": "Cập nhật profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Thông tin giáo viên chủ nhiệm",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null,
+						"description": "Trả về các thông tin của giáo viên giảng dạy\n\n{\"user\":null,\"name\":\"\",\"email\":\"\",\"sex\":null,\"avatar\":null,\"age\":null}"
+					},
+					"response": []
+				},
+				{
+					"name": "Danh sách các hoạt động ngoại khóa đã đăng ký",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/students/activities",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"students",
+								"activities"
+							]
+						},
+						"description": "Trả về list hoạt động đã đăng ký"
+					},
+					"response": []
+				},
+				{
+					"name": "Xin nghỉ học",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/students/absent",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"students",
+								"absent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xem thông tin điểm danh trong ngày",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/students/attend?date=2022-1-17",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"students",
+								"attend"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2022-1-17"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xem thông báo cá nhân",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/students/person_news",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"students",
+								"person_news"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Thông báo lớp",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/students/class_news",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"students",
+								"class_news"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xem thông tin học phí cần nộp theo tháng",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/students/fee?month=1&year=2022",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"students",
+								"fee"
+							],
+							"query": [
+								{
+									"key": "month",
+									"value": "1"
+								},
+								{
+									"key": "year",
+									"value": "2022"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nhận xét giáo viên",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student\": 1,\n    \"comment\": \"ngon\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/teachers/5/thank",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"teachers",
+								"5",
+								"thank"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Đăng ký hoạt động chung",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/students/activities/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"students",
+								"activities",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dành cho giáo viên",
+			"item": [
+				{
+					"name": "Thông tin cá nhân giáo viên",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/teachers/profile",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"teachers",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cập nhật thông tin giáo viên",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user",
+									"value": "5",
+									"type": "default"
+								},
+								{
+									"key": "name",
+									"value": "\"Nguyen Thi A\"",
+									"type": "default"
+								},
+								{
+									"key": "email",
+									"value": "\"teacher1@gmail.com\"",
+									"type": "default"
+								},
+								{
+									"key": "sex",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/home/rikikudohust/Pictures/Screenshot_20220116_144254.png"
+								},
+								{
+									"key": "age",
+									"value": "20",
+									"type": "default"
+								},
+								{
+									"key": "phone",
+									"value": "12141412431234",
+									"type": "default"
+								},
+								{
+									"key": "address",
+									"value": "aadafaf dfs",
+									"type": "default"
+								},
+								{
+									"key": "achievement",
+									"value": "5 nam kinh nghiem trong tre\nbang khen tinh",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/teachers/profile",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"teachers",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Danh sách học sinh trong lớp",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/teachers/students",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"teachers",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Thêm học sinh vào lớp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"student1@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/teachers/students",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"teachers",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xem thời khóa biết cho lớp",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				},
+				{
+					"name": "Xóa thời khóa biểu",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/teachers/schedules/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"teachers",
+								"schedules",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xem toàn bộ thời khóa biểu",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/teachers/schedules",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"teachers",
+								"schedules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Thêm thời khóa biểu",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"daily\": \"MONDAY\",\n    \"periods\": \"am\",\n    \"time_start\": \"9\",\n    \"time_finish\": \"12\",\n    \"title\": \"pp\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/teachers/schedules",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"teachers",
+								"schedules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cập nhật thời khóa biểu",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"time_start\": \"9\",\n    \"time_finish\": \"12\",\n    \"title\": \"ppaa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/teachers/schedules/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"teachers",
+								"schedules",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Điểm danh học sinh",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/rikikudohust/Pictures/abc.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/students/1/attendance?date=2022-1-17",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"students",
+								"1",
+								"attendance"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2022-1-17"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nhận xét học sinh cuối ngyaf",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "comment",
+									"value": "Ngoan",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/students/1/attendance?date=2022-1-17",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"students",
+								"1",
+								"attendance"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2022-1-17"
+								},
+								{
+									"key": "",
+									"value": "ngoan ngoan",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xem thông tin điểm danh của học sinh",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/students/1/attendance?date=2022-1-17",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"students",
+								"1",
+								"attendance"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2022-1-17"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Danh sách nhận xét của học sinh",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/teachers/5/thank",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"teachers",
+								"5",
+								"thank"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xem thông báo cá nhân",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/teachers/person_news",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"teachers",
+								"person_news"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dành cho Admin",
+			"item": [
+				{
+					"name": "Tạo lớp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"5a1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/classes/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"classes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xem danh sách các lớp",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/classes/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"classes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Thông tin cụ thể 1 lớp",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/classes/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"classes",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Thêm giáo viên vào lớp",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"teacher\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/classes/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"classes",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				},
+				{
+					"name": "Thêm thực đơn theo ngày",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name ",
+									"value": "0",
+									"type": "default"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/rikikudohust/Pictures/abc.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/menus",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"menus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xem thực đơn",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/menus",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"menus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Thêm thực đơn theo buổi",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name ",
+									"value": "cá",
+									"type": "default"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/rikikudohust/Pictures/abc.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/menus/0/sesion/0",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"menus",
+								"0",
+								"sesion",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xem thực đơn theo ngày",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/menus/0/sesion",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"menus",
+								"0",
+								"sesion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xem thực đơn theo buổi",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/menus/0/sesion/0",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"menus",
+								"0",
+								"sesion",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xóa món ăn",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/meal/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"meal",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "tạo hoạt động chung",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "eventdate",
+									"value": "2021-10-31",
+									"type": "default"
+								},
+								{
+									"key": "description",
+									"value": "Day la hoat dong hallowen to chuc hang nam. Nham giup cac be giao luu, xin keo, vui choi",
+									"type": "default"
+								},
+								{
+									"key": "title",
+									"value": "Hallowen",
+									"type": "default"
+								},
+								{
+									"key": "location",
+									"value": "Ba vi",
+									"type": "default"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/rikikudohust/Pictures/abc.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/activities/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"activities",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xem danh sách hoạt động chung",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/activities/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"activities",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Hoạt động chung cụ thể",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/activities/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"activities",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xóa hoạt động",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/activities/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"activities",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Danh sách đăng ký hoạt động",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/activities/2/amount",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"activities",
+								"2",
+								"amount"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Thêm thông tin học phí cho tháng",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"month\": 1,\n    \"year\": 2022,\n    \"basicTuition\": 100,\n    \"basicMeal\": 50,\n    \"basicSurcharge1\" : 5,\n    \"basicSurcharge2\": 10,\n    \"basicRedution\":  20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/fee/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"fee",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Thông tin chi tiết học phí theo tháng",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/fee/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"fee",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ĐĂNG KÝ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"teacher2@gmail.com\",\n    \"password\": 1,\n    \"username\": \"teacher2\",\n    \"role\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/register/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"register",
+						""
+					]
+				},
+				"description": "Đăng ký tài khoản( only Admin)"
+			},
+			"response": []
+		},
+		{
+			"name": "ĐĂNG NHẬP",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"student1@gmail.com\",\n    \"password\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/login/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"login",
+						""
+					]
+				},
+				"description": "Đăng nhập cho user"
+			},
+			"response": []
+		},
+		{
+			"name": "ĐĂNG XUẤT",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/logout/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"logout",
+						""
+					]
+				},
+				"description": "Đăng xuất tài khoản"
+			},
+			"response": []
+		},
+		{
+			"name": "TẠO THÔNG BÁO",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Nap tien hoc\",\n    \"description\" : \"han nap tien hoc la\",\n    \"types\": 2,\n    \"receiver\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/news/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"news",
+						""
+					]
+				},
+				"description": "Có 3 loại thông báo :\n\nCá nhân, Lớp và Toàn trường\n\nCá nhân : 0\n\nLớp : 1\n\nToàn trường : 2\n\nVới cá nhân hoặc lớp thì phải truyền thêm receiver = \\[Id_user hoặc id_class\\]"
+			},
+			"response": []
+		},
+		{
+			"name": "Thông báo chung toàn trường",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/news/general",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"news",
+						"general"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

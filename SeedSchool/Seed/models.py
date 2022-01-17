@@ -1,3 +1,4 @@
+from calendar import month
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.fields.files import ImageField
@@ -44,16 +45,17 @@ class Admin(MyModelBase):
 
 class Teacher(MyModelBase):
     user = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)
-
+    phone = models.CharField(max_length=30,default='',null=True,blank=True)
+    address = models.CharField(max_length=30,default='',null=True,blank=True)
+    achievement = models.CharField(max_length=255,default='',null=True,blank=True)
     def __str__(self):
         return self.name
 
 
 class Class(models.Model):
     name = models.CharField(max_length=255,unique=True,default='')
-    teacher = models.OneToOneField('Teacher',on_delete=models.CASCADE,default='')
+    teacher = models.OneToOneField('Teacher',on_delete=models.CASCADE,default='', null=True)
     amount = models.IntegerField(default=0,blank=False)
-    teacher_name = models.CharField(max_length=255,default='')
 
     def __str__(self):
         return self.name
@@ -64,46 +66,30 @@ class Student(MyModelBase):
     phoneparent = models.CharField(max_length=30,default='',null=True,blank=True)
     address = models.CharField(max_length=30,default='',null=True,blank=True)
     idteacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,default='',null=True,blank=True)
-    # schedule = models.ForeignKey('Schedule',on_delete=models.CASCADE,default='',null=True,blank=True)
     classes = models.ForeignKey('Class',on_delete=models.CASCADE,default='',null=True,blank=True)
 
-# class Schedule(models.Model):
-#     classes = models.OneToOneField('Class', on_delete=models.CASCADE, default='', primary_key=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
-
-
-class ScheduleDaily(models.Model):
-    Daily = [
-        (0, 'Monday'),
-        (1, 'Tuesday'),
-        (2, 'Wednesday'),
-        (3, 'Thursday'),
-        (4, 'Friday'),
-        (5, 'Saturday'),
-        (6, 'Sunday'),
-    ]
-    # Time = [
-    #     (0, '0'),
-    #     (1, '1'),
-    #     (2, '2'), (3, '3'),
-    #     (4, '4'),
-    #     (5, '5'),
-    #     (6, '6'), (8, '8'),
-    #     (9, '9'),(10, '10'),
-    #     (7, '7'),(11, '11'),(12, '12'),
-
-    # ]
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    name = models.IntegerField(choices=Daily,default='0')
-    # time_start = models.IntegerField(choices=Time,default='0')
-    # time_finish = models.IntegerField(choices=Time, default='0')
-    # task = models.CharField(max_length=255,blank=False)
-    # schedule = models.ForeignKey(Schedule,related_name='Schedule',on_delete=models.CASCADE)
-    classes = models.ForeignKey('Class', on_delete=models.CASCADE)
-
 class Task(models.Model):
+    #Periods
+    AM = 'am'
+    PM = 'pm'
+    #DAILY
+    MONDAY = 'MONDAY'
+    TUESDAY = 'Tuesday'
+    WEDNESDAY = 'Wednesday'
+    THURSDAY = 'Thursday'
+    FRIDAY = 'Friday'
+    SATURDAY = 'Saturday'
+    SUNDAY = 'Sunday'
+
+    Daily = [
+        (MONDAY, 'Monday'),
+        (TUESDAY, 'Tuesday'),
+        (WEDNESDAY, 'Wednesday'),
+        (THURSDAY, 'Thursday'),
+        (FRIDAY, 'Friday'),
+        (SATURDAY, 'Saturday'),
+        (SUNDAY, 'Sunday'),
+    ]
     Time = [
         (0, '0'),
         (1, '1'),
@@ -114,11 +100,16 @@ class Task(models.Model):
         (9, '9'),(10, '10'),
         (7, '7'),(11, '11'),(12, '12'),
     ]
-    scheduleDaily = models.ForeignKey('ScheduleDaily', on_delete=models.CASCADE)
-    # name = models.IntegerField(choices=Daily,default='0')
+    Periods = [
+        (AM, 'am'),
+        (PM, 'pm'),
+    ]
+    daily = models.CharField(choices=Daily, max_length=255, default=MONDAY)
+    periods = models.CharField(choices=Periods, max_length=255, default=AM)
     time_start = models.IntegerField(choices=Time,default='0')
     time_finish = models.IntegerField(choices=Time, default='0')
     title = models.CharField(max_length=255, default='')
+    classes = models.ForeignKey('Class', on_delete=models.CASCADE, null=True)
 
 class GeneralActivities(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -126,12 +117,13 @@ class GeneralActivities(models.Model):
     description = models.CharField(max_length=255, default='')
     title = models.CharField(max_length=255, default='')
     is_register = models.BooleanField(default=True)
+    location = models.CharField(max_length=255, default='')
     image = models.ImageField(upload_to='Seed/activities/%Y/%m', default='', blank=True, null=True)
 
     def __str__(self):
         return self.description
 
-class ResigterActivities(models.Model):
+class RegisterActivities(models.Model):
     student = models.ForeignKey('Student',on_delete=models.CASCADE)
     activities = models.ForeignKey(GeneralActivities,on_delete=models.CASCADE)
 
@@ -168,8 +160,10 @@ class Attended(models.Model):
     student = models.IntegerField(default='')
     created_at = models.DateTimeField(auto_now_add=True)
     absent = models.BooleanField(default=False)
+    absent_before = models.BooleanField(default=False)
     comment = models.CharField(max_length=255,default='',blank=True, null=True)
     leave = models.DateTimeField(auto_now=True,blank=True, null=True)
+    surcharge = models.IntegerField(default=0)
     image = models.ImageField(upload_to='Seed/%Y/%m', default='', blank=True, null=True)
     datetime = models.DateField(auto_now_add=True)
 
@@ -179,12 +173,50 @@ class Thank(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     comment = models.CharField(max_length=255, default='')
 
+
+class News(models.Model):
+    PERSONAL = 0
+    CLASS = 1
+    ALL = 2
+    Type = [
+        (PERSONAL, 'PERSONAL'),
+        (CLASS, 'CLASS'),
+        (ALL, 'ALL')
+    ]
+    title = models.CharField(max_length=255, default='')
+    description = models.CharField(max_length=255, default='')
+    types = models.IntegerField(choices=Type, default=ALL)
+    create_at = models.DateTimeField(auto_now_add=True)
+
+class PersonalNews(models.Model):
+    receiver =  models.ForeignKey('Student',on_delete=models.CASCADE)
+    news = models.ForeignKey('News',on_delete=models.CASCADE)
+
+class ClassNews(models.Model):
+    receiver =  models.ForeignKey('Class',on_delete=models.CASCADE)
+    news = models.ForeignKey('News',on_delete=models.CASCADE)
+
+class GeneralNews(models.Model):
+    news = models.ForeignKey('News',on_delete=models.CASCADE)
+
 class Fee(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE,default='')
-    totalfee = models.IntegerField(default=0)
-    semester = models.CharField(max_length=255,default='',)
     tuition = models.IntegerField(default=0)
-    mealfee = models.IntegerField(default=0)
+    meal = models.IntegerField(default=0)
+    surcharge = models.IntegerField(default=0)
+    redution = models.IntegerField(default=0)
+    paid = models.IntegerField(default=0)
+    debt = models.IntegerField(default=0)
+    sesionFee = models.ForeignKey('BasicFee', on_delete=models.CASCADE)
+    student = models.ForeignKey('Student', on_delete=models.CASCADE)
+
+class BasicFee(models.Model):
+    month = models.IntegerField(default=1)
+    year = models.IntegerField(default=2022)
+    basicTuition = models.IntegerField(default=0)
+    basicMeal = models.IntegerField(default=0)
+    basicSurcharge1 = models.IntegerField(default=0)
+    basicSurcharge2 = models.IntegerField(default=0)
+    basicRedution = models.IntegerField(default=0)
 
 
 
