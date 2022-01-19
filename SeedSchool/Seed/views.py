@@ -267,15 +267,16 @@ class TeacherStudentView(APIView):
         classInstance = Class.objects.filter(teacher=payload['id']).first()
         if classInstance == None:
             return Response(data={"message": "Class not found"},status=status.HTTP_404_NOT_FOUND)
-        studentInstance = Student.objects.filter(email=data['email']).first()
-        if studentInstance == None:
+        studentInstance = User.objects.filter(email=data['email']).first()
+        student = Student.objects.filter(pk = studentInstance.pk).first()
+        if student == None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = StudentSerializer(studentInstance)
         data = serializer.data
         data['classes'] = classInstance.id
         data['idteacher'] = payload['id']
         data['avatar'] = None
-        serializer_student = StudentSerializer(studentInstance, data=data)
+        serializer_student = StudentSerializer(student, data=data)
         if serializer_student.is_valid():
             serializer_student.save()
 
