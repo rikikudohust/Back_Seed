@@ -25,7 +25,7 @@ class MyModelBase(models.Model):
         (1,'Nữ'),
     ]
     name = models.CharField(max_length=255,default='')
-    email = models.CharField(max_length=30,blank=False,unique=True)
+    # email = models.CharField(max_length=30,blank=False,unique=True)
     sex = models.IntegerField(choices=Sex,default=0)
     avatar = models.ImageField(upload_to='Seed/%Y/%m', default='',blank=True,null=True)
     age = models.IntegerField(default=0,blank=False)
