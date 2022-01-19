@@ -337,7 +337,7 @@ class StudentDetailView(APIView):
         serializer = StudentSerializer(student)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self,request,format=None):
+    def post(self,request,format=None):
         student = self.get_object(request)
         serializer = StudentSerializer(student,data=request.data)
         serializer.is_valid(raise_exception=True)
