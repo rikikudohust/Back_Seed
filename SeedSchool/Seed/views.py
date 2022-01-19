@@ -329,6 +329,7 @@ class StudentDetailView(APIView):
 
     def get_object(self,request):
         token = request.COOKIES.get('jwt')
+        print(token)
         payload = jwt.decode(token, 'secret', algorithms=['HS256'])
         student = Student.objects.filter(user_id=payload['id']).first()
         return student
