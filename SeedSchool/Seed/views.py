@@ -76,7 +76,7 @@ class RegisterView(APIView):
                 #student_group.user_set.add(user)
                 student_data = {"user":serializer.data['id'],
                                 "email":serializer.data['email'],
-                                "name" : serializer.data['username']
+                                "name" : request.data['name']
                                 }
                 student_serializer = StudentSerializer(data=student_data)
                 if student_serializer.is_valid():
@@ -87,7 +87,7 @@ class RegisterView(APIView):
                 #teacher_group.user_set.add(user)
                 teacher_data = {"user":serializer.data['id'],
                                 "email":serializer.data['email'],
-                                "name": serializer.data['username']
+                                "name" : request.data['name']
                                 }
                 teacher_serializer = TeacherSerializer(data=teacher_data)
                 if teacher_serializer.is_valid():
@@ -98,7 +98,7 @@ class RegisterView(APIView):
                 #admin_group.user_set.add(user)
                 admin_data = {"user": serializer.data['id'],
                                 "email": serializer.data['email'],
-                                "name": serializer.data['username']
+                                "name" : request.data['name']
                                 }
                 admin_serializer = TeacherSerializer(data=admin_data)
                 if admin_serializer.is_valid():
@@ -155,6 +155,12 @@ class TeacherView(APIView):
         teacher = Teacher.objects.filter(active=True)
         serializer = TeacherSerializer(teacher,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
+
+class TeacherDetailView2(APIView):
+    def get(self,request,pk,format=None):
+        teacher = Teacher.objects.filter(pk=pk).first()
+        serializers = TeacherSerializer(teacher)
+        return Response(serializers.data,status=status.HTTP_200_OK)
 
 
 class TeacherDetailView(APIView):

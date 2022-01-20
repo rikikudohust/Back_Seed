@@ -141,4 +141,7 @@ AUTH_USER_MODEL = 'Seed.User'
 MEDIA_ROOT = '%s/Seed/static/' % BASE_DIR
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+    'http://localhost:8000'
+)

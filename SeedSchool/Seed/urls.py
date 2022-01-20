@@ -31,6 +31,7 @@ urlpatterns = [
 
     path('teachers/',TeacherView.as_view()),
     path('teachers/profile',TeacherDetailView.as_view()),
+    path('teachers/<int:pk>', TeacherDetailView2.as_view()),
     path('teachers/students', TeacherStudentView.as_view()),
     path('teachers/schedules', TeacherScheduleView.as_view()),
     path('teachers/schedules/<int:pk>', DeleteOrUpdateSchedule.as_view()),
