@@ -189,7 +189,7 @@ class News(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
 
 class PersonalNews(models.Model):
-    receiver =  models.ForeignKey('Student',on_delete=models.CASCADE)
+    receiver =  models.ForeignKey('User',on_delete=models.CASCADE)
     news = models.ForeignKey('News',on_delete=models.CASCADE)
 
 class ClassNews(models.Model):
