@@ -159,7 +159,7 @@ class TeacherView(APIView):
 class TeacherDetailView2(APIView):
     def get(self,request,pk,format=None):
         teacher = Teacher.objects.filter(pk=pk).first()
-        serializers = StudentSerializer(teacher)
+        serializers = TeacherSerializer(teacher)
         return Response(serializers.data,status=status.HTTP_200_OK)
 
 
