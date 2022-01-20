@@ -156,6 +156,12 @@ class TeacherView(APIView):
         serializer = TeacherSerializer(teacher,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
+class TeacherDetailView2(APIView):
+    def get(self,request,pk,format=None):
+        teacher = Teacher.objects.filter(pk=pk).first()
+        serializers = StudentSerializer(teacher)
+        return Response(serializers.data,status=status.HTTP_200_OK)
+
 
 class TeacherDetailView(APIView):
     def get_object(self,request):
