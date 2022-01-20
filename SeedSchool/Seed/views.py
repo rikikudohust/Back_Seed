@@ -609,8 +609,6 @@ class MenuDetailSessionView(APIView):
 
     def post(self,request,pk,id,format=None):
         data = request.data
-        data['sesion']=id
-        data['menu']=pk
         serializer = MealSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
