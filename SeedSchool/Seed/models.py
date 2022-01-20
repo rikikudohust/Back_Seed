@@ -114,7 +114,7 @@ class Task(models.Model):
 class GeneralActivities(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     eventdate = models.DateField(default='')
-    description = models.CharField(max_length=255, default='')
+    description = models.CharField(max_length=1000, default='')
     title = models.CharField(max_length=255, default='')
     is_register = models.BooleanField(default=True)
     location = models.CharField(max_length=255, default='')
