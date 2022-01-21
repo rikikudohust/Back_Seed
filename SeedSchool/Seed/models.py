@@ -47,7 +47,8 @@ class Teacher(MyModelBase):
     user = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)
     phone = models.CharField(max_length=30,default='',null=True,blank=True)
     address = models.CharField(max_length=30,default='',null=True,blank=True)
-    achievement = models.CharField(max_length=255,default='',null=True,blank=True)
+    position = models.CharField(max_length=30,default='',null=True,blank=True)
+    achievement = models.CharField(max_length=4000,default='',null=True,blank=True)
     def __str__(self):
         return self.name
 
@@ -114,7 +115,7 @@ class Task(models.Model):
 class GeneralActivities(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     eventdate = models.DateField(default='')
-    description = models.CharField(max_length=255, default='')
+    description = models.CharField(max_length=4000, default='')
     title = models.CharField(max_length=255, default='')
     is_register = models.BooleanField(default=True)
     location = models.CharField(max_length=255, default='')
