@@ -435,7 +435,7 @@ class UserNewsView(APIView):
 class ClassNewsView(APIView):
    def get(self,request,pk,format=None):
         student = Student.objects.filter(pk=pk).values('Classes')
-        data = student[0]['Classes']
+        data = student[0]['classes']
         listNews = ClassNews.objects.filter(receiver=data)
         serializer = PersonalNewsSerializer(listNews, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK) 
