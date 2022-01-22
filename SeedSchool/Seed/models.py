@@ -72,37 +72,56 @@ class Student(MyModelBase):
 
 class Task(models.Model):
     #Lesson
-    lesson1 = "LESSON1"
-    lesson2 = "LESSON2"
-    lesson3 = "LESSON3"
-    lesson4 = "LESSON4"
-    #DAILY
-    MONDAY = 'Monday'
-    TUESDAY = 'Tuesday'
-    WEDNESDAY = 'Wednesday'
-    THURSDAY = 'Thursday'
-    FRIDAY = 'Friday'
-    SATURDAY = 'Saturday'
-    SUNDAY = 'Sunday'
+    # lesson1 = "LESSON1"
+    # lesson2 = "LESSON2"
+    # lesson3 = "LESSON3"
+    # lesson4 = "LESSON4"
+    # #DAILY
+    # MONDAY = 'Monday'
+    # TUESDAY = 'Tuesday'
+    # WEDNESDAY = 'Wednesday'
+    # THURSDAY = 'Thursday'
+    # FRIDAY = 'Friday'
+    # SATURDAY = 'Saturday'
+    # SUNDAY = 'Sunday'
 
-    Daily = [
-        (MONDAY, 'Monday'),
-        (TUESDAY, 'Tuesday'),
-        (WEDNESDAY, 'Wednesday'),
-        (THURSDAY, 'Thursday'),
-        (FRIDAY, 'Friday'),
-        (SATURDAY, 'Saturday'),
-        (SUNDAY, 'Sunday'),
-    ]
-    Lesson = [
-        (lesson1, "LESSON1"),
-        (lesson2, "LESSON2"),
-        (lesson3, "LESSON3"),
-        (lesson4, "LESSON4"),
-    ]
-    daily = models.CharField(choices=Daily, max_length=255, default=MONDAY)
-    lesson = models.CharField(choices=Lesson, max_length=255, default=lesson1)
-    title = models.CharField(max_length=255, default='')
+    # Daily = [
+    #     (MONDAY, 'Monday'),
+    #     (TUESDAY, 'Tuesday'),
+    #     (WEDNESDAY, 'Wednesday'),
+    #     (THURSDAY, 'Thursday'),
+    #     (FRIDAY, 'Friday'),
+    #     (SATURDAY, 'Saturday'),
+    #     (SUNDAY, 'Sunday'),
+    # ]
+    # Lesson = [
+    #     (lesson1, "LESSON1"),
+    #     (lesson2, "LESSON2"),
+    #     (lesson3, "LESSON3"),
+    #     (lesson4, "LESSON4"),
+    # ]
+    # daily = models.CharField(choices=Daily, max_length=255, default=MONDAY)
+    # lesson = models.CharField(choices=Lesson, max_length=255, default=lesson1)
+    t_11 = models.CharField(max_length=255, default='')
+    t_12 = models.CharField(max_length=255, default='')
+    t_13 = models.CharField(max_length=255, default='')
+    t_14 = models.CharField(max_length=255, default='')
+    t_15 = models.CharField(max_length=255, default='')
+    t_21 = models.CharField(max_length=255, default='')
+    t_22 = models.CharField(max_length=255, default='')
+    t_23 = models.CharField(max_length=255, default='')
+    t_24 = models.CharField(max_length=255, default='')
+    t_25 = models.CharField(max_length=255, default='')
+    t_31 = models.CharField(max_length=255, default='')
+    t_32 = models.CharField(max_length=255, default='')
+    t_33 = models.CharField(max_length=255, default='')
+    t_34 = models.CharField(max_length=255, default='')
+    t_35 = models.CharField(max_length=255, default='')
+    t_41 = models.CharField(max_length=255, default='')
+    t_42 = models.CharField(max_length=255, default='')
+    t_43 = models.CharField(max_length=255, default='')
+    t_44 = models.CharField(max_length=255, default='')
+    t_45 = models.CharField(max_length=255, default='')
     classes = models.ForeignKey('Class', on_delete=models.CASCADE, null=True)
     version = models.IntegerField(default=0, null=True)
 
