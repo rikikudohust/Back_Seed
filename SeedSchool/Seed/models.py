@@ -1,4 +1,5 @@
 from calendar import month
+from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.fields.files import ImageField
@@ -70,11 +71,13 @@ class Student(MyModelBase):
     classes = models.ForeignKey('Class',on_delete=models.CASCADE,default='',null=True,blank=True)
 
 class Task(models.Model):
-    #Periods
-    AM = 'am'
-    PM = 'pm'
+    #Lesson
+    lesson1 = "LESSON1"
+    lesson2 = "LESSON2"
+    lesson3 = "LESSON3"
+    lesson4 = "LESSON4"
     #DAILY
-    MONDAY = 'MONDAY'
+    MONDAY = 'Monday'
     TUESDAY = 'Tuesday'
     WEDNESDAY = 'Wednesday'
     THURSDAY = 'Thursday'
@@ -91,26 +94,17 @@ class Task(models.Model):
         (SATURDAY, 'Saturday'),
         (SUNDAY, 'Sunday'),
     ]
-    Time = [
-        (0, '0'),
-        (1, '1'),
-        (2, '2'), (3, '3'),
-        (4, '4'),
-        (5, '5'),
-        (6, '6'), (8, '8'),
-        (9, '9'),(10, '10'),
-        (7, '7'),(11, '11'),(12, '12'),
-    ]
-    Periods = [
-        (AM, 'am'),
-        (PM, 'pm'),
+    Lesson = [
+        (lesson1, "LESSON1"),
+        (lesson2, "LESSON2"),
+        (lesson3, "LESSON3"),
+        (lesson4, "LESSON4"),
     ]
     daily = models.CharField(choices=Daily, max_length=255, default=MONDAY)
-    periods = models.CharField(choices=Periods, max_length=255, default=AM)
-    time_start = models.IntegerField(choices=Time,default='0')
-    time_finish = models.IntegerField(choices=Time, default='0')
+    lesson = models.CharField(choices=Lesson, max_length=255, default=lesson1)
     title = models.CharField(max_length=255, default='')
     classes = models.ForeignKey('Class', on_delete=models.CASCADE, null=True)
+    version = models.IntegerField(default=0, null=True)
 
 class GeneralActivities(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
