@@ -294,6 +294,13 @@ class TeacherThankView(APIView):
 
         teacher = Thank.objects.filter(teacher=pk)
         serializer = ThankSerializer(teacher,many=True)
+        length = len(serializer.data)
+        for x in range(length):
+            studentID = serializer.data[x]['student']
+            student = Student.objects.filter(pk=studentID).first()
+            serializer.data[x]['student_name'] = student.name
+            # print(student.avatar)
+            serializer.data[x]['avatar'] = str(student.avatar)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
         
