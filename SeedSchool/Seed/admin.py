@@ -14,4 +14,6 @@ admin.site.register(Meal)
 admin.site.register(Menu)
 admin.site.register(Fee)
 admin.site.register(BasicFee)
+admin.site.register(Thank)
+admin.site.register(News)
 

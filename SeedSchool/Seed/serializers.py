@@ -49,7 +49,7 @@ class AttendSerializer(serializers.ModelSerializer):
 class AttendSerializer1(serializers.ModelSerializer):
     class Meta :
         model = Attended
-        fields = ['comment']
+        fields = ['comment','surcharge','leave']
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:

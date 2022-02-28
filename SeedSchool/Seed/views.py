@@ -294,6 +294,13 @@ class TeacherThankView(APIView):
 
         teacher = Thank.objects.filter(teacher=pk)
         serializer = ThankSerializer(teacher,many=True)
+        length = len(serializer.data)
+        for x in range(length):
+            studentID = serializer.data[x]['student']
+            student = Student.objects.filter(pk=studentID).first()
+            serializer.data[x]['student_name'] = student.name
+            # print(student.avatar)
+            serializer.data[x]['avatar'] = str(student.avatar)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
         
@@ -385,8 +392,8 @@ class StudentAttendanceView(APIView):
             "leave": now,
             "comment": request.data["comment"]
         }
-        bound1 = now.replace(minute=30, hour=17, second=0)
-        bound2 = now.replace(minute=30, hour=18, second=0)
+        bound1 = now.replace(minute=30, hour=8, second=0)
+        bound2 = now.replace(minute=30, hour=9, second=0)
         
         if now >= bound1 and now < bound2:
             data["surcharge"] = 1
@@ -434,7 +441,7 @@ class UserNewsView(APIView):
 
 class ClassNewsView(APIView):
    def get(self,request,pk,format=None):
-        student = Student.objects.filter(pk=pk).values('Classes')
+        student = Student.objects.filter(pk=pk).values('classes')
         data = student[0]['classes']
         listNews = ClassNews.objects.filter(receiver=data)
         serializer = PersonalNewsSerializer(listNews, many=True)
